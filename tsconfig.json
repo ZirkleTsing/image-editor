@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "jsx": "react",
+    "baseUrl": "./",
+    "lib": [
+      "ES2015.Promise",
+      "DOM",
+      "ES2015",
+      "es2017"
+    ],
+    "target":"es2015",
+    "moduleResolution": "node",
+    "paths": {
+      "@@/*": [".dumi/tmp/*"],
+      "image-editor": ["src"],
+      "image-editor/*": ["src/*", "*"]
+    }
+  }
+}
