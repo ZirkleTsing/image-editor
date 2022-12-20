@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite"
 import { useEditor } from './ImageEditorContext'
 import { useDrag } from '../hooks'
 
-interface IDot {
+interface IAnchor {
   position: {
     top: number,
     left: number
@@ -12,11 +12,11 @@ interface IDot {
   effect: any
 }
 
-const Dot: React.FC<IDot> = (props) => {
+const Anchor: React.FC<IAnchor> = (props) => {
   const { editor } = useEditor()
   const { position, id, ...others } = props
   const ref = useDrag(id)
-  const dotUrl = editor.dotUrl
+  const anchorUrl = editor.anchorUrl
 
   useEffect(() => {
     return props.effect()
@@ -25,20 +25,20 @@ const Dot: React.FC<IDot> = (props) => {
   return (
     <div
       ref={ref}
-      className="image-anchor-editor__dot"
+      className="image-anchor-editor__anchor"
       data-image-anchor-id={id}
       style={{
         position: 'absolute',
         left: position.left,
         top: position.top,
-        backgroundImage: `url('${dotUrl}')`
+        backgroundImage: `url('${anchorUrl}')`
       }}
       {...others}
     />
   )
 }
 
-export const DotManager: React.FC = observer(() => {
+export const AnchorManager: React.FC = observer(() => {
   const { editor } = useEditor()
   if (!editor) {
     return null
@@ -46,12 +46,12 @@ export const DotManager: React.FC = observer(() => {
 
   return (
     <div>
-      {editor.dotMeta.map(meta => {
+      {editor.anchorMeta.map(anchor => {
         return (
-          <Dot
-            key={meta.id}
-            position={{ left: meta.left, top: meta.top }}
-            {...meta}
+          <Anchor
+            key={anchor.id}
+            position={{ left: anchor.left, top: anchor.top }}
+            {...anchor}
           />
         )
       })}

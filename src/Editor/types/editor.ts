@@ -1,14 +1,14 @@
-import { DotType } from './dot'
+import { AnchorType } from './Anchor'
 
 export interface IEditorProps {
   domRef: HTMLElement
-  dots: DotType[]// dot实例的参数
+  anchors: AnchorType[]// dot实例的参数
   imageUrl: string // 编辑器图片
-  dotUrl?: string // 图钉图片素材
+  anchorUrl?: string // 图钉图片素材
 }
 
 export type EditorFactory = {
-  dots: Pick<DotType, 'position'>[]
+  anchors: Pick<AnchorType, 'position'>[]
   imageUrl: IEditorProps['imageUrl']
-  dotUrl?: IEditorProps['dotUrl']
+  anchorUrl?: IEditorProps['anchorUrl']
 }

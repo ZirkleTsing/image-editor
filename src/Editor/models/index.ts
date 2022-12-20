@@ -1,2 +1,2 @@
 export * from './Editor'
-export * from './Dot'
+export * from './Anchor'

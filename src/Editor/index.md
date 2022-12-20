@@ -9,7 +9,7 @@ export default () => {
   return (
     <ImageEditor
       config={{
-        dots: [
+        anchors: [
           {
             position: { x: 10, y: 10 }
           },
@@ -18,7 +18,7 @@ export default () => {
           }
         ],
         imageUrl: 'https://i.328888.xyz/2022/12/18/4M6XE.png',
-        dotUrl: 'https://i.328888.xyz/2022/12/18/4M5St.png'
+        anchorUrl: 'https://i.328888.xyz/2022/12/18/4M5St.png'
       }}
     />
   )

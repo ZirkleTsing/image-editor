@@ -1,6 +1,6 @@
 import { generate } from 'short-uuid'
 import { makeObservable, observable, computed } from 'mobx'
-import { Dot } from './Dot'
+import { Anchor } from './Anchor'
 import type { IEditorProps, EditorFactory, Position } from '../types'
 /**
  * Editor 功能
@@ -25,12 +25,12 @@ export class Editor {
   width: number
   height: number
   private imgUrl: string
-  dotUrl?: string
+  anchorUrl?: string
   pageX: number
   pageY: number
-  onDotDragging = false
+  onAnchorDragging = false
   draggingTarget = ''
-  dots: Dot[]
+  anchors: Anchor[]
   limit = {
     left: 0,
     top: 0,
@@ -51,7 +51,7 @@ export class Editor {
     this.pageX = rect.left
     this.pageY = rect.top
     this.imgUrl = props.imageUrl
-    this.dotUrl = props.dotUrl
+    this.anchorUrl = props.anchorUrl
     this.limit = {
       left: rect.left,
       top: rect.top,
@@ -59,12 +59,12 @@ export class Editor {
       bottom: rect.bottom
     }
     this.init()
-    this.dots = Dot.create(props.dots, this)
+    this.anchors = Anchor.create(props.anchors, this)
     
     makeObservable(this, {
-      dots: observable,
-      dotMeta: computed,
-      onDotDragging: observable,
+      anchors: observable,
+      anchorMeta: computed,
+      onAnchorDragging: observable,
       draggingTarget: observable,
       startPosition: observable.struct
     })
@@ -77,7 +77,7 @@ export class Editor {
   effect = () => {
     const listener = () => {
       this.draggingTarget = ''
-      this.onDotDragging = false
+      this.onAnchorDragging = false
     }
     this.ref.addEventListener('mouseup', listener)
     return () => {
@@ -85,31 +85,31 @@ export class Editor {
     }
   }
 
-  get dotMeta() {
-    return this.dots?.map(dot => {
+  get anchorMeta() {
+    return this.anchors?.map(anchor => {
       return {
-        left: dot.offsetLeft,
-        top: dot.offsetTop,
-        id: dot.uuid,
-        effect: dot.effect
+        left: anchor.offsetLeft,
+        top: anchor.offsetTop,
+        id: anchor.uuid,
+        effect: anchor.effect
       }
     })
   }
 
   updatePosition = (id: string, position: Position) => {
-    const dot = this.dots.find(dot => {
-      return dot.id === id
+    const anchor = this.anchors.find(anchor => {
+      return anchor.id === id
     })!
-    dot.updatePosition(position)
+    anchor.updatePosition(position)
   }
 
   static create = (ref: HTMLElement, props: EditorFactory): Editor => {
     return new Editor({
       domRef: ref,
       ...props,
-      dots: props.dots?.map(dot => {
+      anchors: props.anchors?.map(anchor => {
         return {
-          ...dot,
+          ...anchor,
           uuid: generate()
         }
       })

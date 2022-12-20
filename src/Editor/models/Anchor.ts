@@ -1,5 +1,5 @@
 import { makeObservable, observable } from 'mobx'
-import type { DotType, Position, IEditorProps } from '../types'
+import type { AnchorType, Position, IEditorProps } from '../types'
 import { Editor } from './Editor';
 
 /**
@@ -9,22 +9,22 @@ import { Editor } from './Editor';
  * 
  */
 
-export class Dot {
+export class Anchor {
   private position: Position
   offsetLeft: number
   offsetTop: number
   uuid: string
-  dotUrl?: string
+  anchorUrl?: string
   editor: Editor
   ref: HTMLElement | null = null
   width = 0
   height = 0
-  constructor(props: DotType, editor: Editor) {
+  constructor(props: AnchorType, editor: Editor) {
     this.position = props.position
     this.uuid = props.uuid
     this.offsetLeft = this.position.x
     this.offsetTop = this.position.y
-    this.dotUrl = editor.dotUrl
+    this.anchorUrl = editor.anchorUrl
     this.editor = editor
     makeObservable(this, {
       offsetLeft: observable,
@@ -50,9 +50,9 @@ export class Dot {
     this.offsetTop = Math.max(Math.min(this.offsetTop + y, this.editor.height - this.height), 0)
   }
 
-  static create(dots: IEditorProps['dots'], editor: Editor): Dot[] {
-    return dots?.map(dot => {
-      return new Dot(dot, editor)
+  static create(anchors: IEditorProps['anchors'], editor: Editor): Anchor[] {
+    return anchors?.map(anchor => {
+      return new Anchor(anchor, editor)
     })
   }
 }

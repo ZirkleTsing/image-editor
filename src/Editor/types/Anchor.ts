@@ -3,9 +3,9 @@ export type Position = {
   y: number
 }
 
-export type DotType = {
+export type AnchorType = {
   uuid: string // 唯一id
   position: Position // 画布坐标
 }
 
-export type IDotProps = DotType
+export type IAnchorProps = AnchorType

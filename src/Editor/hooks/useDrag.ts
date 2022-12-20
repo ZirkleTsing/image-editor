@@ -22,7 +22,7 @@ export const useDrag = (id: string) => {
     if (ref.current) {
       const onMouseDown = (e: MouseEvent) => {
         e.preventDefault();
-        editor.onDotDragging = true;
+        editor.onAnchorDragging = true;
         editor.draggingTarget = id;
         editor.startPosition = {
           x: e.pageX,
@@ -32,16 +32,15 @@ export const useDrag = (id: string) => {
 
       const onMouseMove = (e: MouseEvent) => {
         e.preventDefault();
-        if (editor.onDotDragging && editor.draggingTarget === id) {
+        if (editor.onAnchorDragging && editor.draggingTarget === id) {
           let offsetPosition = calcOffset(e);
           editor.updatePosition(id, { x: offsetPosition.x, y: offsetPosition.y });
         }
       }
 
       const onMouseUp = (e: MouseEvent) => {
-        console.log('取消')
         e.preventDefault();
-        editor.onDotDragging = false;
+        editor.onAnchorDragging = false;
         editor.draggingTarget = '';
       }
 
