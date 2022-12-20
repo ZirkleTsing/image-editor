@@ -20,7 +20,7 @@ export const useDrag = (id: string) => {
 
   useEffect(() => {
     if (ref.current) {
-      ref.current.addEventListener('mousedown', (e) => {
+      const onMouseDown = (e: MouseEvent) => {
         e.preventDefault();
         editor.onDotDragging = true;
         editor.draggingTarget = id;
@@ -28,22 +28,32 @@ export const useDrag = (id: string) => {
           x: e.pageX,
           y: e.pageY,
         };
-      });
+      }
 
-      ref.current.addEventListener('mousemove', (e: MouseEvent) => {
+      const onMouseMove = (e: MouseEvent) => {
         e.preventDefault();
         if (editor.onDotDragging && editor.draggingTarget === id) {
           let offsetPosition = calcOffset(e);
           editor.updatePosition(id, { x: offsetPosition.x, y: offsetPosition.y });
         }
-      });
+      }
 
-      ref.current.addEventListener('mouseup', (e) => {
+      const onMouseUp = (e: MouseEvent) => {
         console.log('取消')
         e.preventDefault();
         editor.onDotDragging = false;
         editor.draggingTarget = '';
-      });
+      }
+
+      ref.current.addEventListener('mousedown', onMouseDown);
+      ref.current.addEventListener('mousemove', onMouseMove);
+      ref.current.addEventListener('mouseup', onMouseUp);
+
+      return () => {
+        ref.current?.removeEventListener('mousedown', onMouseDown)
+        ref.current?.removeEventListener('mousemove', onMouseMove)
+        ref.current?.removeEventListener('mouseup', onMouseUp)
+      }
     }
   }, []);
 
