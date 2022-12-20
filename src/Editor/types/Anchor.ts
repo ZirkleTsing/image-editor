@@ -3,9 +3,8 @@ export type Position = {
   y: number
 }
 
-export type AnchorType = {
+export type AnchorType<E = any> = {
   uuid: string // 唯一id
   position: Position // 画布坐标
+  extra: E
 }
-
-export type IAnchorProps = AnchorType

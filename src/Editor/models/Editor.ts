@@ -24,7 +24,7 @@ export class Editor {
   private ref: HTMLElement
   width: number
   height: number
-  private imgUrl: string
+  imgUrl: string
   anchorUrl?: string
   pageX: number
   pageY: number
@@ -91,6 +91,7 @@ export class Editor {
         left: anchor.offsetLeft,
         top: anchor.offsetTop,
         id: anchor.uuid,
+        extra: anchor.extra,
         effect: anchor.effect
       }
     })

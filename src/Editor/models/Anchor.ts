@@ -17,6 +17,7 @@ export class Anchor {
   anchorUrl?: string
   editor: Editor
   ref: HTMLElement | null = null
+  extra: any
   width = 0
   height = 0
   constructor(props: AnchorType, editor: Editor) {
@@ -25,6 +26,7 @@ export class Anchor {
     this.offsetLeft = this.position.x
     this.offsetTop = this.position.y
     this.anchorUrl = editor.anchorUrl
+    this.extra = props.extra
     this.editor = editor
     makeObservable(this, {
       offsetLeft: observable,

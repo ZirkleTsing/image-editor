@@ -5,16 +5,17 @@ import { useDrag } from '../hooks'
 
 interface IAnchor {
   position: {
-    top: number,
+    top: number
     left: number
   }
-  id: string,
+  id: string
+  extra: any,
   effect: any
 }
 
 const Anchor: React.FC<IAnchor> = (props) => {
-  const { editor } = useEditor()
-  const { position, id, ...others } = props
+  const { editor, renderItem } = useEditor()
+  const { position, id, extra, ...others } = props
   const ref = useDrag(id)
   const anchorUrl = editor.anchorUrl
 
@@ -31,12 +32,15 @@ const Anchor: React.FC<IAnchor> = (props) => {
         position: 'absolute',
         left: position.left,
         top: position.top,
-        backgroundImage: `url('${anchorUrl}')`
+        backgroundImage: renderItem ? undefined : `url('${anchorUrl}')`
       }}
       {...others}
-    />
+    >
+      {renderItem?.({ imageUrl: editor.imgUrl, anchorUrl: editor.anchorUrl, extra })}
+    </div>
   )
 }
+
 
 export const AnchorManager: React.FC = observer(() => {
   const { editor } = useEditor()
@@ -47,6 +51,7 @@ export const AnchorManager: React.FC = observer(() => {
   return (
     <div>
       {editor.anchorMeta.map(anchor => {
+        console.log('anchor:', anchor)
         return (
           <Anchor
             key={anchor.id}

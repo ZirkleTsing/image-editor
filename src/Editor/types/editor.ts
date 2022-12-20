@@ -8,7 +8,7 @@ export interface IEditorProps {
 }
 
 export type EditorFactory = {
-  anchors: Pick<AnchorType, 'position'>[]
+  anchors: Omit<AnchorType, 'uuid'>[]
   imageUrl: IEditorProps['imageUrl']
   anchorUrl?: IEditorProps['anchorUrl']
 }
