@@ -16,6 +16,11 @@ import type { IEditorProps, EditorFactory, Position, IChangeValue, AnchorType } 
  * 4. 变更图钉实例 DONE
  * 5. 管理拖拽状态，正在拖拽的实例 DONE
  * 6. 图钉的事件管理 DONE
+ *      -- 选中节点
+ *      -- 开始拖拽
+ *      -- 拖拽中
+ *      -- 拖拽结束
+ *      -- 上报信息
  *  == 工厂方法 ==
  *  生成 Editor 的方法 imageEditor.create(ref, {}) DONE
  *    -- anchor uuid的工厂函数 DONE
