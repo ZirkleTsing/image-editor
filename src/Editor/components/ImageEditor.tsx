@@ -8,7 +8,6 @@ import cls from 'classnames'
 import type { AnchorType, IChangeValue } from '../types'
 
 export interface ImageEditorProps<Extra = any> {
-  editorRef?: React.MutableRefObject<Editor>
   style: React.CSSProperties
   className?: string
   config: {
@@ -28,13 +27,13 @@ export interface ImageEditorProps<Extra = any> {
   }) => JSX.Element
 }
 
-export const ImageEditor: <T>(props: PropsWithChildren<ImageEditorProps<T>>) => JSX.Element
-  = observer((props) => {
-    const { onChange, onDragStart, onDragEnd, onSelect, editorRef, renderItem } = props
-    const ref = useRef<HTMLDivElement | null>(null)
+export const ImageEditor: <T>(props: PropsWithChildren<ImageEditorProps<T>>, ref?: React.MutableRefObject<any>) => JSX.Element
+  = observer((props, ref) => {
+    const { onChange, onDragStart, onDragEnd, onSelect, renderItem } = props
+    const containerRef = useRef<HTMLDivElement | null>(null)
     const [editor, setEditorInstance] = useState<Editor>(undefined as unknown as Editor)
     useEffect(() => {
-      const editor = Editor.create(ref.current as HTMLElement, {
+      const editor = Editor.create(containerRef.current as HTMLElement, {
         anchorUrl: 'https://img.alicdn.com/imgextra/i1/O1CN01QZC5lz288ky8Wx98Q_!!6000000007888-2-tps-200-200.png',
         ...props.config,
         onChange,
@@ -43,9 +42,8 @@ export const ImageEditor: <T>(props: PropsWithChildren<ImageEditorProps<T>>) => 
         onSelect
       })
       setEditorInstance(editor)
-      
-      if (editorRef) {
-        editorRef.current = editor
+      if (ref) {
+        ref.current = editor
       }
 
       return editor.effect()
@@ -54,11 +52,11 @@ export const ImageEditor: <T>(props: PropsWithChildren<ImageEditorProps<T>>) => 
     return (
       <ImageEditorContext.Provider value={{ editor, renderItem }}>
         <div
-          ref={ref}
+          ref={containerRef}
           className={cls('image-anchor-editor', props.className)}
         >
           <AnchorManager />
         </div>
       </ImageEditorContext.Provider>
     )
-  })
+  }, { forwardRef: true })

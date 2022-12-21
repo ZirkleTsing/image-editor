@@ -52,18 +52,14 @@ import { useRef, useEffect } from 'react'
 import { ImageEditor, Editor, generateUuid } from 'image-editor';
 
 export default () => {
-  const ref = useRef<Editor>(null)
-
-  useEffect(() => {
-    console.log('ref', ref.current)
-  }, [])
+  const editorRef = useRef<Editor>(null)
 
   return (
     <div>
       <div style={{ marginBottom: '7px' }}>
         <button
           onClick={() => {
-            ref.current?.createAnchor({
+            editorRef.current?.createAnchor({
                 position: { x: 40, y: 40 },
                 extra: {
                   text: '耐克鞋'
@@ -75,7 +71,7 @@ export default () => {
         </button>
       </div>
       <ImageEditor
-        editorRef={ref}
+        ref={editorRef}
         onChange={(value) => {
           console.log('change:', value)
         }}
