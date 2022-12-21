@@ -30,12 +30,12 @@ export interface ImageEditorProps<Extra = any> {
 
 export const ImageEditor: <T>(props: PropsWithChildren<ImageEditorProps<T>>) => JSX.Element
   = observer((props) => {
-    const { onChange, onDragStart, onDragEnd, editorRef, onSelect } = props
+    const { onChange, onDragStart, onDragEnd, onSelect, editorRef, renderItem } = props
     const ref = useRef<HTMLDivElement | null>(null)
     const [editor, setEditorInstance] = useState<Editor>(undefined as unknown as Editor)
     useEffect(() => {
       const editor = Editor.create(ref.current as HTMLElement, {
-        anchorUrl: 'https://i.328888.xyz/2022/12/18/4M5St.png',
+        anchorUrl: 'https://i.328888.xyz/2022/12/21/AmGow.png',
         ...props.config,
         onChange,
         onDragStart,
@@ -52,7 +52,7 @@ export const ImageEditor: <T>(props: PropsWithChildren<ImageEditorProps<T>>) => 
     }, [])
     
     return (
-      <ImageEditorContext.Provider value={{ editor, renderItem: props.renderItem }}>
+      <ImageEditorContext.Provider value={{ editor, renderItem }}>
         <div
           ref={ref}
           className={cls('image-anchor-editor', props.className)}
