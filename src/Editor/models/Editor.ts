@@ -38,7 +38,7 @@ export class Editor<Extra = any> {
   onAnchorDragging = false
   draggingTarget = ''
   anchors: Anchor<Extra>[] 
-  initialAnchors:AnchorType<Extra>[] // 画布初始的锚点配置
+  initialAnchors: AnchorType<Extra>[] // 画布初始的锚点配置
   activeAnchor = '' // 当前选中的锚点
   onChange?: (value: IChangeValue<Extra>) => void
   onDragStart?: (id: string) => void
@@ -74,6 +74,7 @@ export class Editor<Extra = any> {
       anchorMeta: computed,
       context: computed,
       startPosition: observable.struct,
+      updatePosition: action,
       createAnchor: action,
       deleteAnchor: action
     })

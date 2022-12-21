@@ -70,7 +70,7 @@ export default () => {
               })
           }}
         >
-          添加节点
+          添加锚点
         </button>
       </div>
       <ImageEditor
