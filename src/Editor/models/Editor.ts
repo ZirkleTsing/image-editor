@@ -1,8 +1,9 @@
 import { generate } from 'short-uuid'
-import { makeObservable, observable, computed, toJS } from 'mobx'
+import { makeObservable, observable, computed, action, toJS } from 'mobx'
 import { Anchor } from './Anchor'
 import { calcOffset } from '../shared'
 import type { IEditorProps, EditorFactory, Position, IChangeValue, AnchorType } from '../types'
+
 /**
  * Editor 功能
  * 1. 初始化
@@ -77,6 +78,8 @@ export class Editor<Extra = any> {
       anchorMeta: computed,
       context: computed,
       startPosition: observable.struct,
+      createAnchor: action,
+      deleteAnchor: action
     })
   }
 
@@ -118,14 +121,7 @@ export class Editor<Extra = any> {
       }
     })
   }
-
-  updatePosition = (id: string, position: Position) => {
-    const anchor = this.anchors.find(anchor => {
-      return anchor.id === id
-    })!
-    anchor.updatePosition(position)
-  }
-
+  
   get context() {
     return {
       anchors: this.anchors.map(anchor => {
@@ -138,6 +134,26 @@ export class Editor<Extra = any> {
     }
   }
 
+  updatePosition = (id: string, position: Position) => {
+    const anchor = this.anchors.find(anchor => {
+      return anchor.id === id
+    })!
+    anchor.updatePosition(position)
+  }
+
+  deleteAnchor = (id: string) => {
+    const index = this.anchors.findIndex(anchor => anchor.id === id)
+    this.anchors.splice(index, 1)
+  }
+
+  createAnchor = (config: Omit<AnchorType<Extra>, 'uuid'>) => {
+    const anchor = new Anchor({
+      ...config,
+      uuid: generate()
+    }, this)
+    this.anchors.push(anchor)
+  }
+  
   static create = <Extra = any>(ref: HTMLElement, props: EditorFactory<Extra>): Editor => {
     return new Editor({
       domRef: ref,
