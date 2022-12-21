@@ -13,14 +13,16 @@ export const useDrag = (id: string) => {
         e.preventDefault();
         editor.onAnchorDragging = true;
         editor.draggingTarget = id;
-        editor.activeAnchor = id
         editor.startPosition = {
           x: e.pageX,
           y: e.pageY,
         };
-
+        
         editor.onDragStart?.(id)
-        editor.onSelect?.(id)
+        if (editor.activeAnchor !== id) {
+          editor.onSelect?.(id)
+          editor.activeAnchor = id
+        }
       }
 
       // 这里删掉 挪到Editor进行管理，拖拽更丝滑
