@@ -12,7 +12,7 @@ export interface IEditorProps<Extra = any> {
 }
 
 export type EditorFactory<Extra = any> = {
-  anchors: Omit<AnchorType<Extra>, 'uuid'>[]
+  anchors: (Omit<AnchorType<Extra>, 'uuid'> & Partial<Pick<AnchorType<Extra>, 'uuid'>>)[]
   imageUrl: IEditorProps['imageUrl']
   anchorUrl?: IEditorProps['anchorUrl']
   onChange?: (value: IChangeValue) => void

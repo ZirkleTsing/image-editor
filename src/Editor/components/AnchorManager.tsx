@@ -16,12 +16,12 @@ interface IAnchor {
 
 const Anchor: React.FC<IAnchor> = observer((props) => {
   const { editor, renderItem } = useEditor()
-  const { position, id, extra, ...others } = props
+  const { position, id, extra, effect, ...others } = props
   const ref = useDrag(id)
   const anchorUrl = editor.anchorUrl
   const active = editor.activeAnchor === id
   useEffect(() => {
-    return props.effect()
+    return effect()
   }, [])
 
   return (

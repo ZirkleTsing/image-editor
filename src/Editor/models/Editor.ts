@@ -158,7 +158,7 @@ export class Editor<Extra = any> {
       anchors: props.anchors?.map(anchor => {
         return {
           ...anchor,
-          uuid: generate()
+          uuid: anchor.uuid ?? generate()
         }
       })
     })

@@ -1,3 +1,4 @@
+import { generate } from 'short-uuid'
 import type { Editor } from './models'
 
 export const calcOffset = (e: MouseEvent, editor: Editor) => {
@@ -12,3 +13,7 @@ export const calcOffset = (e: MouseEvent, editor: Editor) => {
   editor.startPosition = currentPosition;
   return offsetPosition;
 };
+
+export const generateUuid = () => {
+  return generate()
+}

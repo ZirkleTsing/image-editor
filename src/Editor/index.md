@@ -3,7 +3,7 @@
 图片编辑器示例
 
 ```jsx
-import { ImageEditor } from 'image-editor';
+import { ImageEditor, generateUuid } from 'image-editor';
 
 export default () => {
   return (
@@ -20,20 +20,22 @@ export default () => {
       config={{
         anchors: [
           {
+            uuid: '11',
             position: { x: 10, y: 10 },
             extra: {
               text: '连衣裙'
             }
           },
           {
+            uuid: '22',
             position: { x: 20, y: 20 },
             extra: {
                text: '帽子'
             }
           }
         ],
-        imageUrl: 'https://i.328888.xyz/2022/12/18/4M6XE.png',
-        anchorUrl: 'https://i.328888.xyz/2022/12/18/4M5St.png',
+        imageUrl: 'https://i.328888.xyz/2022/12/21/AmGow.png',
+        anchorUrl: 'https://i.328888.xyz/2022/12/21/AmFRz.png',
       }}
       // renderItem={(context) => {
       //   return (
@@ -48,7 +50,7 @@ export default () => {
 增加锚点
 ```jsx
 import { useRef, useEffect } from 'react'
-import { ImageEditor, Editor } from 'image-editor';
+import { ImageEditor, Editor, generateUuid } from 'image-editor';
 
 export default () => {
   const ref = useRef<Editor>(null)
@@ -87,20 +89,22 @@ export default () => {
         config={{
           anchors: [
             {
+              uuid: generateUuid(),
               position: { x: 10, y: 10 },
               extra: {
                 text: '连衣裙'
               }
             },
             {
+              uuid: '33',
               position: { x: 20, y: 20 },
               extra: {
                 text: '帽子'
               }
             }
           ],
-          imageUrl: 'https://i.328888.xyz/2022/12/18/4M6XE.png',
-          anchorUrl: 'https://i.328888.xyz/2022/12/18/4M5St.png',
+          imageUrl: 'https://i.328888.xyz/2022/12/21/AmGow.png',
+          anchorUrl: 'https://i.328888.xyz/2022/12/21/AmFRz.png',
         }}
       />
     </div>
@@ -132,8 +136,8 @@ export default () => {
             }
           }
         ],
-        imageUrl: 'https://i.328888.xyz/2022/12/18/4M6XE.png',
-        anchorUrl: 'https://i.328888.xyz/2022/12/18/4M5St.png',
+        imageUrl: 'https://i.328888.xyz/2022/12/21/AmGow.png',
+        anchorUrl: 'https://i.328888.xyz/2022/12/21/AmFRz.png',
       }}
       renderItem={(context) => {
         return (
