@@ -35,7 +35,7 @@ export const ImageEditor: <T>(props: PropsWithChildren<ImageEditorProps<T>>) => 
     const [editor, setEditorInstance] = useState<Editor>(undefined as unknown as Editor)
     useEffect(() => {
       const editor = Editor.create(ref.current as HTMLElement, {
-        anchorUrl: 'https://i.328888.xyz/2022/12/21/AmGow.png',
+        anchorUrl: 'https://img.alicdn.com/imgextra/i1/O1CN01QZC5lz288ky8Wx98Q_!!6000000007888-2-tps-200-200.png',
         ...props.config,
         onChange,
         onDragStart,

@@ -34,8 +34,7 @@ export default () => {
             }
           }
         ],
-        imageUrl: 'https://i.328888.xyz/2022/12/21/AmGow.png',
-        anchorUrl: 'https://i.328888.xyz/2022/12/21/AmFRz.png',
+        imageUrl: 'https://img.alicdn.com/imgextra/i1/O1CN01Hbl8j41i5O2vFcI6K_!!6000000004361-2-tps-430-654.png',
       }}
       // renderItem={(context) => {
       //   return (
@@ -103,8 +102,7 @@ export default () => {
               }
             }
           ],
-          imageUrl: 'https://i.328888.xyz/2022/12/21/AmGow.png',
-          anchorUrl: 'https://i.328888.xyz/2022/12/21/AmFRz.png',
+          imageUrl: 'https://img.alicdn.com/imgextra/i1/O1CN01Hbl8j41i5O2vFcI6K_!!6000000004361-2-tps-430-654.png',
         }}
       />
     </div>
@@ -136,8 +134,7 @@ export default () => {
             }
           }
         ],
-        imageUrl: 'https://i.328888.xyz/2022/12/21/AmGow.png',
-        anchorUrl: 'https://i.328888.xyz/2022/12/21/AmFRz.png',
+        imageUrl: 'https://img.alicdn.com/imgextra/i1/O1CN01Hbl8j41i5O2vFcI6K_!!6000000004361-2-tps-430-654.png',
       }}
       renderItem={(context) => {
         return (
