@@ -6,19 +6,19 @@ import type { IEditorProps, EditorFactory, Position, IChangeValue, AnchorType } 
 
 /**
  * Editor 功能
- * 1. 初始化
- *  - 背景图片 imgUrl
- *    -- dom尺寸
- *  - 图片尺寸裁减居中
- *  - 图钉生成的初始坐标，不能重叠
- * 2. 创建图钉实例
- * 3. 删除图钉实例
- * 4. 变更图钉实例？
- * 5. 管理拖拽状态，正在拖拽的实例
- * 6. 点击图钉的消息通知，
+ * 1. 初始化 DONE
+ *  - 背景图片 imgUrl DONE
+ *    -- dom尺寸 DONE
+ *  - 图片尺寸裁减居中 DONE
+ *  - 图钉生成的初始坐标，不能重叠 TODO
+ * 2. 创建图钉实例 DONE
+ * 3. 删除图钉实例 DONE
+ * 4. 变更图钉实例 DONE
+ * 5. 管理拖拽状态，正在拖拽的实例 DONE
+ * 6. 图钉的事件管理 DONE
  *  == 工厂方法 ==
- *  生成 Editor 的方法 imageEditor.create(ref, {})
- *    -- anchor uuid的工厂函数
+ *  生成 Editor 的方法 imageEditor.create(ref, {}) DONE
+ *    -- anchor uuid的工厂函数 DONE
  * 
  */
 
@@ -33,17 +33,12 @@ export class Editor<Extra = any> {
   onAnchorDragging = false
   draggingTarget = ''
   anchors: Anchor<Extra>[] 
-  initialAnchors:AnchorType<Extra>[]
+  initialAnchors:AnchorType<Extra>[] // 画布初始的锚点配置
+  activeAnchor = '' // 当前选中的锚点
   onChange?: (value: IChangeValue<Extra>) => void
   onDragStart?: (id: string) => void
   onDragEnd?: (id: string) => void
-  limit = {
-    left: 0,
-    top: 0,
-    right: 0,
-    bottom: 0
-  }
-
+  onSelect?: (id: string) => void
   startPosition: Position = {
     x: 0,
     y: 0
@@ -58,16 +53,11 @@ export class Editor<Extra = any> {
     this.pageY = rect.top
     this.imgUrl = props.imageUrl
     this.anchorUrl = props.anchorUrl
-    this.limit = {
-      left: rect.left,
-      top: rect.top,
-      right: rect.right,
-      bottom: rect.bottom
-    }
     this.initialAnchors = toJS(props.anchors)
     this.onChange = props.onChange
     this.onDragStart = props.onDragStart
     this.onDragEnd = props.onDragEnd
+    this.onSelect = props.onSelect
     this.init()
     this.anchors = Anchor.create(props.anchors, this)
     
@@ -75,6 +65,7 @@ export class Editor<Extra = any> {
       anchors: observable,
       onAnchorDragging: observable,
       draggingTarget: observable,
+      activeAnchor: observable,
       anchorMeta: computed,
       context: computed,
       startPosition: observable.struct,

@@ -8,6 +8,7 @@ export interface IEditorProps<Extra = any> {
   onChange?: (value: IChangeValue<Extra>) => void
   onDragStart?: (id: string) => void
   onDragEnd?: (id: string) => void
+  onSelect?: (id: string) => void
 }
 
 export type EditorFactory<Extra = any> = {
@@ -17,6 +18,7 @@ export type EditorFactory<Extra = any> = {
   onChange?: (value: IChangeValue) => void
   onDragStart?: (id: string) => void
   onDragEnd?: (id: string) => void
+  onSelect?: (id: string) => void
 }
 
 export interface IChangeValue<E = any> {

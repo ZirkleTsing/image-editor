@@ -19,25 +19,28 @@ export interface ImageEditorProps<Extra = any> {
   onChange?: (value: IChangeValue<Extra>) => void
   onDragStart?: (id: string) => void
   onDragEnd?: (id: string) => void
+  onSelect?: (id: string) => void
   renderItem?: (context: {
     extra: Extra
     imageUrl: string
     anchorUrl?: string
+    active: boolean // 当前锚点是否被选中
   }) => JSX.Element
 }
 
 export const ImageEditor: <T>(props: PropsWithChildren<ImageEditorProps<T>>) => JSX.Element
   = observer((props) => {
-    const { onChange, onDragStart, onDragEnd, editorRef } = props
+    const { onChange, onDragStart, onDragEnd, editorRef, onSelect } = props
     const ref = useRef<HTMLDivElement | null>(null)
     const [editor, setEditorInstance] = useState<Editor>(undefined as unknown as Editor)
     useEffect(() => {
       const editor = Editor.create(ref.current as HTMLElement, {
         anchorUrl: 'https://i.328888.xyz/2022/12/18/4M5St.png',
         ...props.config,
-        onChange: onChange,
-        onDragStart: onDragStart,
-        onDragEnd: onDragEnd
+        onChange,
+        onDragStart,
+        onDragEnd,
+        onSelect
       })
       setEditorInstance(editor)
       

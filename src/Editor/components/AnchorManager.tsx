@@ -14,12 +14,12 @@ interface IAnchor {
   effect: any
 }
 
-const Anchor: React.FC<IAnchor> = (props) => {
+const Anchor: React.FC<IAnchor> = observer((props) => {
   const { editor, renderItem } = useEditor()
   const { position, id, extra, ...others } = props
   const ref = useDrag(id)
   const anchorUrl = editor.anchorUrl
-
+  const active = editor.activeAnchor === id
   useEffect(() => {
     return props.effect()
   }, [])
@@ -27,7 +27,7 @@ const Anchor: React.FC<IAnchor> = (props) => {
   return (
     <div
       ref={ref}
-      className={cls("image-anchor-editor__anchor", { default: !renderItem })}
+      className={cls("image-anchor-editor__anchor", { default: !renderItem, active: !renderItem && active })}
       data-image-anchor-id={id}
       style={{
         position: 'absolute',
@@ -37,10 +37,10 @@ const Anchor: React.FC<IAnchor> = (props) => {
       }}
       {...others}
     >
-      {renderItem?.({ imageUrl: editor.imgUrl, anchorUrl: editor.anchorUrl, extra })}
+      {renderItem?.({ imageUrl: editor.imgUrl, anchorUrl: editor.anchorUrl, extra, active })}
     </div>
   )
-}
+})
 
 
 export const AnchorManager: React.FC = observer(() => {
