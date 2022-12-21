@@ -1,4 +1,4 @@
-import { makeObservable, observable } from 'mobx'
+import { makeObservable, observable, action } from 'mobx'
 import type { AnchorType, Position, IEditorProps } from '../types'
 import { Editor } from './Editor';
 
@@ -9,15 +9,15 @@ import { Editor } from './Editor';
  * 
  */
 
-export class Anchor {
-  private position: Position
+export class Anchor<Extra = any> {
+  position: Position
   offsetLeft: number
   offsetTop: number
   uuid: string
   anchorUrl?: string
   editor: Editor
   ref: HTMLElement | null = null
-  extra: any
+  extra: Extra
   width = 0
   height = 0
   constructor(props: AnchorType, editor: Editor) {
@@ -31,7 +31,8 @@ export class Anchor {
     makeObservable(this, {
       offsetLeft: observable,
       offsetTop: observable,
-      uuid: observable
+      uuid: observable,
+      updatePosition: action
     })
   }
 
@@ -47,9 +48,10 @@ export class Anchor {
 
   updatePosition = (offset: Position) => {
     const { x, y } = offset
-    console.log(this.offsetLeft + x, this.offsetTop + y)
     this.offsetLeft = Math.max(Math.min(this.offsetLeft + x, this.editor.width - this.width), 0)
     this.offsetTop = Math.max(Math.min(this.offsetTop + y, this.editor.height - this.height), 0)
+    this.position.x = this.offsetLeft
+    this.position.y = this.offsetTop
   }
 
   static create(anchors: IEditorProps['anchors'], editor: Editor): Anchor[] {

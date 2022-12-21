@@ -5,7 +5,7 @@ import { AnchorManager } from './AnchorManager'
 import { ImageEditorContext } from './ImageEditorContext'
 import cls from 'classnames'
 
-import type { AnchorType } from '../types'
+import type { AnchorType, IChangeValue } from '../types'
 
 export interface ImageEditorProps<Extra = any> {
   style: React.CSSProperties
@@ -15,6 +15,9 @@ export interface ImageEditorProps<Extra = any> {
     imageUrl: string
     anchorUrl?: string
   },
+  onChange?: (value: IChangeValue<Extra>) => void
+  onDragStart?: (id: string) => void
+  onDragEnd?: (id: string) => void
   renderItem?: (context: {
     extra: Extra
     imageUrl: string
@@ -27,13 +30,12 @@ export const ImageEditor: <T>(props: PropsWithChildren<ImageEditorProps<T>>) => 
     const ref = useRef<HTMLDivElement | null>(null)
     const [editor, setEditorInstance] = useState<Editor>(undefined as unknown as Editor)
     useEffect(() => {
-      console.log({
-        anchorUrl: 'https://i.328888.xyz/2022/12/18/4M5St.png',
-        ...props.config,
-      })
       const editor = Editor.create(ref.current as HTMLElement, {
         anchorUrl: 'https://i.328888.xyz/2022/12/18/4M5St.png',
         ...props.config,
+        onChange: props.onChange,
+        onDragStart: props.onDragStart,
+        onDragEnd: props.onDragEnd
       })
       setEditorInstance(editor)
       return editor.effect()

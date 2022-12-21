@@ -1,7 +1,8 @@
 import { generate } from 'short-uuid'
-import { makeObservable, observable, computed } from 'mobx'
+import { makeObservable, observable, computed, toJS } from 'mobx'
 import { Anchor } from './Anchor'
-import type { IEditorProps, EditorFactory, Position } from '../types'
+import { calcOffset } from '../shared'
+import type { IEditorProps, EditorFactory, Position, IChangeValue, AnchorType } from '../types'
 /**
  * Editor 功能
  * 1. 初始化
@@ -15,12 +16,12 @@ import type { IEditorProps, EditorFactory, Position } from '../types'
  * 5. 管理拖拽状态，正在拖拽的实例
  * 6. 点击图钉的消息通知，
  *  == 工厂方法 ==
- *  生成 dot uuid的工厂函数
  *  生成 Editor 的方法 imageEditor.create(ref, {})
+ *    -- anchor uuid的工厂函数
  * 
  */
 
-export class Editor {
+export class Editor<Extra = any> {
   private ref: HTMLElement
   width: number
   height: number
@@ -30,7 +31,11 @@ export class Editor {
   pageY: number
   onAnchorDragging = false
   draggingTarget = ''
-  anchors: Anchor[]
+  anchors: Anchor<Extra>[] 
+  initialAnchors:AnchorType<Extra>[]
+  onChange?: (value: IChangeValue<Extra>) => void
+  onDragStart?: (id: string) => void
+  onDragEnd?: (id: string) => void
   limit = {
     left: 0,
     top: 0,
@@ -43,7 +48,7 @@ export class Editor {
     y: 0
   }
 
-  constructor(props: IEditorProps) {
+  constructor(props: IEditorProps<Extra>) {
     this.ref = props.domRef
     this.width = props.domRef.offsetWidth
     this.height = props.domRef.offsetHeight
@@ -58,15 +63,20 @@ export class Editor {
       right: rect.right,
       bottom: rect.bottom
     }
+    this.initialAnchors = toJS(props.anchors)
+    this.onChange = props.onChange
+    this.onDragStart = props.onDragStart
+    this.onDragEnd = props.onDragEnd
     this.init()
     this.anchors = Anchor.create(props.anchors, this)
     
     makeObservable(this, {
       anchors: observable,
-      anchorMeta: computed,
       onAnchorDragging: observable,
       draggingTarget: observable,
-      startPosition: observable.struct
+      anchorMeta: computed,
+      context: computed,
+      startPosition: observable.struct,
     })
   }
 
@@ -75,13 +85,25 @@ export class Editor {
   }
 
   effect = () => {
-    const listener = () => {
+    const onMouseUp = () => {
       this.draggingTarget = ''
       this.onAnchorDragging = false
+      this.onChange?.(this.context)
     }
-    this.ref.addEventListener('mouseup', listener)
+    const onMouseMove = (e: MouseEvent) => {
+      e.preventDefault();
+      if (this.onAnchorDragging) {
+        const id = this.draggingTarget
+        let offsetPosition = calcOffset(e, this);
+        this.updatePosition(id, { x: offsetPosition.x, y: offsetPosition.y });
+      }
+    }
+
+    this.ref.addEventListener('mouseup', onMouseUp)
+    this.ref.addEventListener('mousemove', onMouseMove)
     return () => {
-      this.ref.removeEventListener('mouseup', listener)
+      this.ref.removeEventListener('mouseup', onMouseUp)
+      this.ref.removeEventListener('mousemove', onMouseMove)
     }
   }
 
@@ -104,7 +126,19 @@ export class Editor {
     anchor.updatePosition(position)
   }
 
-  static create = (ref: HTMLElement, props: EditorFactory): Editor => {
+  get context() {
+    return {
+      anchors: this.anchors.map(anchor => {
+        return {
+          uuid: anchor.id,
+          position: anchor.position,
+          extra: anchor.extra
+        }
+      })
+    }
+  }
+
+  static create = <Extra = any>(ref: HTMLElement, props: EditorFactory<Extra>): Editor => {
     return new Editor({
       domRef: ref,
       ...props,

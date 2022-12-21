@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { observer } from "mobx-react-lite"
+import cls from 'classnames'
 import { useEditor } from './ImageEditorContext'
 import { useDrag } from '../hooks'
 
@@ -26,7 +27,7 @@ const Anchor: React.FC<IAnchor> = (props) => {
   return (
     <div
       ref={ref}
-      className="image-anchor-editor__anchor"
+      className={cls("image-anchor-editor__anchor", { default: !renderItem })}
       data-image-anchor-id={id}
       style={{
         position: 'absolute',
@@ -51,7 +52,6 @@ export const AnchorManager: React.FC = observer(() => {
   return (
     <div>
       {editor.anchorMeta.map(anchor => {
-        console.log('anchor:', anchor)
         return (
           <Anchor
             key={anchor.id}

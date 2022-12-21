@@ -8,6 +8,15 @@ import { ImageEditor } from 'image-editor';
 export default () => {
   return (
     <ImageEditor
+      onChange={(value) => {
+        console.log('change:', value)
+      }}
+      onDragStart={(value) => {
+        console.log('onDragStart id:', value)
+      }}
+       onDragEnd={(value) => {
+        console.log('onDragEnd id:', value)
+      }}
       config={{
         anchors: [
           {
@@ -28,8 +37,8 @@ export default () => {
       }}
       // renderItem={(context) => {
       //   return (
-      //     <div style={{ width: '100px' }}>{context.extra.text}</div>
-      //   )
+      //     <div>测试</div>
+      //   ) 
       // }}
     />
   )
