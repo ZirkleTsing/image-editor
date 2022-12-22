@@ -48,11 +48,13 @@ export class Editor<Extra = any> {
     x: 0,
     y: 0
   }
+  root?: HTMLElement
 
   constructor(props: IEditorProps<Extra>) {
     this.ref = props.domRef
     this.width = props.domRef.clientWidth // 不包含border的宽度
     this.height = props.domRef.clientHeight // 不包含border的宽度
+    this.root = props.root
     const rect = props.domRef.getBoundingClientRect()
     this.pageX = rect.left
     this.pageY = rect.top
@@ -135,6 +137,7 @@ export class Editor<Extra = any> {
   }
 
   effect = () => {
+    const ref = this.root ?? this.ref
     const onMouseUp = () => {
       this.draggingTarget = ''
       this.onAnchorDragging = false
@@ -149,11 +152,11 @@ export class Editor<Extra = any> {
       }
     }
 
-    this.ref.addEventListener('mouseup', onMouseUp)
-    this.ref.addEventListener('mousemove', onMouseMove)
+    ref.addEventListener('mouseup', onMouseUp)
+    ref.addEventListener('mousemove', onMouseMove)
     return () => {
-      this.ref.removeEventListener('mouseup', onMouseUp)
-      this.ref.removeEventListener('mousemove', onMouseMove)
+      ref.removeEventListener('mouseup', onMouseUp)
+      ref.removeEventListener('mousemove', onMouseMove)
     }
   }
 

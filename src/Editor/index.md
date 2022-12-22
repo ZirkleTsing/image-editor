@@ -35,6 +35,7 @@ export default () => {
         ],
         imageUrl: 'https://img.alicdn.com/imgextra/i1/O1CN01Hbl8j41i5O2vFcI6K_!!6000000004361-2-tps-430-654.png',
       }}
+      root={document.body}
       // renderItem={(context) => {
       //   return (
       //     <div>测试</div>
@@ -87,7 +88,7 @@ export default () => {
               position: { x: 10, y: 10 },
               extra: {
                 text: '连衣裙'
-              }
+              },
             },
             {
               uuid: '33',

@@ -9,6 +9,7 @@ export interface IEditorProps<Extra = any> {
   onDragStart?: (id: string) => void
   onDragEnd?: (id: string) => void
   onSelect?: (id: string) => void
+  root?: HTMLElement
 }
 
 export type EditorFactory<Extra = any> = {
@@ -19,6 +20,7 @@ export type EditorFactory<Extra = any> = {
   onDragStart?: (id: string) => void
   onDragEnd?: (id: string) => void
   onSelect?: (id: string) => void
+  root?: HTMLElement
 }
 
 export interface IChangeValue<E = any> {
