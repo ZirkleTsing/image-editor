@@ -163,14 +163,18 @@ const fetchFromServerAnchorsValue = [
   }
 ]
 
+type Extra = {
+  text: string
+}
+
 interface IComponent {
-  anchors: Array<AnchorType<{ text: string }>>
+  anchors: Array<AnchorType<Extra>>
   onChange: any
 }
 
 const Component: React.FC<IComponent> = (props) => {
   const imageUrl = 'https://img.alicdn.com/imgextra/i1/O1CN01Hbl8j41i5O2vFcI6K_!!6000000004361-2-tps-430-654.png'
-  const editorRef = useRef<Editor>(null)
+  const editorRef = useRef<Editor<Extra>>(null)
   
   const handleOnChange = (id: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const anchors = props.anchors?.concat()
@@ -198,7 +202,7 @@ const Component: React.FC<IComponent> = (props) => {
     const payload = {
       position: { x: 40, y: 40 },
       extra: {
-        text: '耐克鞋'
+        text: '耐克鞋',
       },
       uuid: generateUuid()
     }
