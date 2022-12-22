@@ -158,8 +158,8 @@ export class Editor<Extra = any> {
   }
 
 
-  static create = <Extra = any>(ref: HTMLElement, props: EditorFactory<Extra>): Editor => {
-    return new Editor({
+  static create = <Extra = any>(ref: HTMLElement, props: EditorFactory<Extra>): Editor<Extra> => {
+    return new Editor<Extra>({
       domRef: ref,
       ...props,
       anchors: props.anchors?.map(anchor => {

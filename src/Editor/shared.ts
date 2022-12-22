@@ -17,3 +17,5 @@ export const calcOffset = (e: MouseEvent, editor: Editor) => {
 export const generateUuid = () => {
   return generate()
 }
+
+export const isFn = (val: any): val is (...args: any) => any => typeof val === 'function'

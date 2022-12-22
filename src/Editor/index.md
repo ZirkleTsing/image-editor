@@ -46,12 +46,12 @@ export default () => {
 ```
 
 ## 增加锚点
-```jsx
-import { useRef, useEffect } from 'react'
+```tsx
+import React, { useRef, useEffect } from 'react'
 import { ImageEditor, Editor, generateUuid } from 'image-editor';
 
 export default () => {
-  const editorRef = useRef<Editor>(null)
+  const editorRef = useRef<Editor<{ text: string }>>(null)
 
   return (
     <div>
@@ -142,9 +142,9 @@ export default () => {
 ```
 
 ## 更新操作
-```jsx
-import { useRef, useEffect, useState, useMemo, Fragment } from 'react'
-import { ImageEditor, Editor, generateUuid } from 'image-editor';
+```tsx
+import React, { useRef, useEffect, useState, useMemo, Fragment } from 'react'
+import { ImageEditor, Editor, generateUuid, ImageEditorProps, AnchorType } from 'image-editor';
 
 const fetchFromServerAnchorsValue = [
   {
@@ -163,13 +163,18 @@ const fetchFromServerAnchorsValue = [
   }
 ]
 
-const Component = (props) => {
+interface IComponent {
+  anchors: Array<AnchorType<{ text: string }>>
+  onChange: any
+}
+
+const Component: React.FC<IComponent> = (props) => {
   const imageUrl = 'https://img.alicdn.com/imgextra/i1/O1CN01Hbl8j41i5O2vFcI6K_!!6000000004361-2-tps-430-654.png'
   const editorRef = useRef<Editor>(null)
   
-  const handleOnChange = (id) => (e) => {
+  const handleOnChange = (id: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const anchors = props.anchors?.concat()
-    const target = anchors.find(anchor => anchor.uuid === id)
+    const target = anchors.find(anchor => anchor.uuid === id)!
     const extra = {
       ...target.extra,
       text: e.target.value
@@ -179,7 +184,7 @@ const Component = (props) => {
     editorRef.current?.updateAnchor(id, extra)
   }
 
-  const handleDelete = (id) => () => {
+  const handleDelete = (id: string) => () => {
     console.log('delete', id)
     const anchors = props.anchors?.concat()
     const index = props.anchors?.findIndex(anchor => anchor.uuid === id)
@@ -202,7 +207,7 @@ const Component = (props) => {
     editorRef.current?.createAnchor(payload)
   }
 
-  const handleFocus = (id) => () => {
+  const handleFocus = (id: string) => () => {
     if (editorRef.current) {
       editorRef.current.activeAnchor = id
     }
@@ -258,7 +263,7 @@ const Component = (props) => {
 export default () => {
   const [anchors, setAnchors] = useState(fetchFromServerAnchorsValue)
 
-  const onChange = ({ anchors }) => {
+  const onChange = ({ anchors }: any) => {
     console.log('onChange anchors:', anchors)
     setAnchors(anchors)
   }

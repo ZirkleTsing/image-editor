@@ -2,7 +2,7 @@ import { AnchorType, Position } from './Anchor'
 
 export interface IEditorProps<Extra = any> {
   domRef: HTMLElement
-  anchors: AnchorType<Extra>[]// dot实例的参数
+  anchors: Array<AnchorType<Extra>> // dot实例的参数
   imageUrl: string // 编辑器图片
   anchorUrl?: string // 图钉图片素材
   onChange?: (value: IChangeValue<Extra>) => void
@@ -12,7 +12,7 @@ export interface IEditorProps<Extra = any> {
 }
 
 export type EditorFactory<Extra = any> = {
-  anchors: (Omit<AnchorType<Extra>, 'uuid'> & Partial<Pick<AnchorType<Extra>, 'uuid'>>)[]
+  anchors: Array<(Omit<AnchorType<Extra>, 'uuid'> & Partial<Pick<AnchorType<Extra>, 'uuid'>>)>
   imageUrl: IEditorProps['imageUrl']
   anchorUrl?: IEditorProps['anchorUrl']
   onChange?: (value: IChangeValue) => void

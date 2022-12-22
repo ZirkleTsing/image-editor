@@ -5,11 +5,11 @@ import { AnchorManager } from './AnchorManager'
 import { ImageEditorContext } from './ImageEditorContext'
 import cls from 'classnames'
 
-import type { AnchorType, IChangeValue } from '../types'
+import type { IChangeValue, EditorFactory } from '../types'
 
 export interface ImageEditorProps<Extra = any> {
   config: {
-    anchors: Omit<AnchorType<Extra>, 'uuid'>[]
+    anchors: EditorFactory<Extra>['anchors']
     imageUrl: string
     anchorUrl?: string
   },
@@ -29,6 +29,7 @@ export interface ImageEditorProps<Extra = any> {
     anchorUrl?: string
     active: boolean // 当前锚点是否被选中
   }) => JSX.Element
+  ref?: React.MutableRefObject<any>
 }
 
 export const ImageEditor: <T>(props: PropsWithChildren<ImageEditorProps<T>>, ref?: React.MutableRefObject<any>) => JSX.Element

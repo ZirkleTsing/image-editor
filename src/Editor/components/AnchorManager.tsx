@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite"
 import cls from 'classnames'
 import { useEditor } from './ImageEditorContext'
 import { useDrag } from '../hooks'
+import { isFn } from '../shared'
 
 interface IAnchor {
   position: {
@@ -27,18 +28,18 @@ const Anchor: React.FC<IAnchor> = observer((props) => {
   return (
     <div
       ref={ref}
-      className={cls("image-anchor-editor__anchor", anchorClassName, { default: !renderItem, active: !renderItem && active })}
+      className={cls("image-anchor-editor__anchor", anchorClassName, { default: !isFn(renderItem), active })}
       data-image-anchor-id={id}
       style={{
         position: 'absolute',
         left: position.left,
         top: position.top,
-        backgroundImage: renderItem ? undefined : `url('${anchorUrl}')`,
+        backgroundImage: isFn(renderItem) ? undefined : `url('${anchorUrl}')`,
         ...anchorStyle
       }}
       {...others}
     >
-      {renderItem?.({ imageUrl: editor.imgUrl, anchorUrl: editor.anchorUrl, extra, active })}
+      {isFn(renderItem) && renderItem({ imageUrl: editor.imgUrl, anchorUrl: editor.anchorUrl, extra, active })}
     </div>
   )
 })
