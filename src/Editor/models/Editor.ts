@@ -8,7 +8,7 @@ import type { IEditorProps, EditorFactory, Position, IChangeValue, AnchorType } 
  * Editor 功能
  * 1. 初始化 DONE
  *  - 背景图片 imgUrl DONE
- *    -- dom尺寸 DONE
+ *    -- dom尺寸初始化计算 DONE
  *  - 图片尺寸裁减居中 DONE
  *  - 图钉生成的初始坐标，不能重叠 TODO
  * 2. 创建图钉实例 DONE
