@@ -141,3 +141,132 @@ export default () => {
   )
 }
 ```
+
+更新操作
+```jsx
+import { useRef, useEffect, useState, useMemo, Fragment } from 'react'
+import { ImageEditor, Editor, generateUuid } from 'image-editor';
+
+const fetchFromServerAnchorsValue = [
+  {
+    uuid: generateUuid(), // uuid必须要
+    position: { x: 28, y: 14 },
+    extra: {
+      text: '连衣裙'
+    }
+  },
+  {
+    uuid: generateUuid(),
+    position: { x: 50, y: 60 },
+    extra: {
+        text: '帽子'
+    }
+  }
+]
+
+const Component = (props) => {
+  const imageUrl = 'https://img.alicdn.com/imgextra/i1/O1CN01Hbl8j41i5O2vFcI6K_!!6000000004361-2-tps-430-654.png'
+  const editorRef = useRef<Editor>(null)
+  
+  const handleOnChange = (id) => (e) => {
+    const anchors = props.anchors?.concat()
+    const target = anchors.find(anchor => anchor.uuid === id)
+    const extra = {
+      ...target.extra,
+      text: e.target.value
+    }
+    target.extra = extra
+    props.onChange({ anchors })
+    editorRef.current?.updateAnchor(id, extra)
+  }
+
+  const handleDelete = (id) => () => {
+    console.log('delete', id)
+    const anchors = props.anchors?.concat()
+    const index = props.anchors?.findIndex(anchor => anchor.uuid === id)
+    anchors?.splice(index, 1)
+    props.onChange({ anchors })
+    editorRef.current?.deleteAnchor(id)
+  }
+  
+  const handleAdd = () => {
+    const anchors = props.anchors?.concat()
+    const payload = {
+      position: { x: 40, y: 40 },
+      extra: {
+        text: '耐克鞋'
+      },
+      uuid: generateUuid()
+    }
+    anchors.push(payload)
+    props.onChange({ anchors })
+    editorRef.current?.createAnchor(payload)
+  }
+
+  const handleFocus = (id) => () => {
+    if (editorRef.current) {
+      editorRef.current.activeAnchor = id
+    }
+  }
+
+  return (
+    <div style={{ display: 'flex' }}>
+      <div style={{ width: '500px' }}>
+        {props.anchors.map(anchor => {
+          return (
+            <div
+              key={anchor.uuid}
+            >
+              <input
+                value={anchor.extra.text}
+                onFocus={handleFocus(anchor.uuid)}
+                onChange={handleOnChange(anchor.uuid)}
+              />
+              <button onClick={handleDelete(anchor.uuid)}>删除</button>
+            </div>
+          )
+        })}
+        <button onClick={handleAdd}>增加</button>
+      </div>
+      <div style={{ flex: 1 }}>
+        <ImageEditor
+          ref={editorRef}
+          onChange={props.onChange}
+          config={{
+            imageUrl,
+            anchors: props.anchors?.map((anchor) => {
+              return {
+                ...anchor,
+                uuid: anchor.uuid
+              }
+            })
+          }}
+          renderItem={(context) => {
+            return (
+              <div
+                style={{ color: context.active ? 'red' : undefined }}
+              >
+                {context.extra.text}
+              </div>
+            )
+          }}
+        />
+      </div>
+    </div>
+  )
+}
+
+export default () => {
+  const [anchors, setAnchors] = useState(fetchFromServerAnchorsValue)
+
+  const onChange = ({ anchors }) => {
+    console.log('onChange anchors:', anchors)
+    setAnchors(anchors)
+  }
+
+  return (
+    <Component anchors={anchors} onChange={onChange} />
+  )
+}
+
+```

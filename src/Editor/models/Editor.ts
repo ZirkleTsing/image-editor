@@ -51,8 +51,8 @@ export class Editor<Extra = any> {
 
   constructor(props: IEditorProps<Extra>) {
     this.ref = props.domRef
-    this.width = props.domRef.offsetWidth
-    this.height = props.domRef.offsetHeight
+    this.width = props.domRef.clientWidth // 不包含border的宽度
+    this.height = props.domRef.clientHeight // 不包含border的宽度
     const rect = props.domRef.getBoundingClientRect()
     this.pageX = rect.left
     this.pageY = rect.top
@@ -76,7 +76,8 @@ export class Editor<Extra = any> {
       startPosition: observable.struct,
       updatePosition: action,
       createAnchor: action,
-      deleteAnchor: action
+      updateAnchor: action,
+      deleteAnchor: action,
     })
   }
 
@@ -138,11 +139,6 @@ export class Editor<Extra = any> {
     anchor.updatePosition(position)
   }
 
-  deleteAnchor = (id: string) => {
-    const index = this.anchors.findIndex(anchor => anchor.id === id)
-    this.anchors.splice(index, 1)
-  }
-
   createAnchor = (config: Omit<AnchorType<Extra>, 'uuid'>) => {
     const anchor = new Anchor({
       ...config,
@@ -151,6 +147,17 @@ export class Editor<Extra = any> {
     this.anchors.push(anchor)
   }
   
+  updateAnchor = (id: string, extra: Extra) => {
+    const index = this.anchors.findIndex(anchor => anchor.id === id)
+    this.anchors[index].extra = extra
+  }
+
+  deleteAnchor = (id: string) => {
+    const index = this.anchors.findIndex(anchor => anchor.id === id)
+    this.anchors.splice(index, 1)
+  }
+
+
   static create = <Extra = any>(ref: HTMLElement, props: EditorFactory<Extra>): Editor => {
     return new Editor({
       domRef: ref,

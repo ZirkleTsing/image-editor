@@ -31,6 +31,7 @@ export class Anchor<Extra = any> {
     makeObservable(this, {
       offsetLeft: observable,
       offsetTop: observable,
+      extra: observable.struct,
       uuid: observable,
       updatePosition: action
     })
