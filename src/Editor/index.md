@@ -1,7 +1,6 @@
 # 图片编辑器
 
-图片编辑器示例
-
+## 图片编辑器示例
 ```jsx
 import { ImageEditor, generateUuid } from 'image-editor';
 
@@ -46,7 +45,7 @@ export default () => {
 }
 ```
 
-增加锚点
+## 增加锚点
 ```jsx
 import { useRef, useEffect } from 'react'
 import { ImageEditor, Editor, generateUuid } from 'image-editor';
@@ -106,7 +105,7 @@ export default () => {
 }
 ```
 
-选中锚点后高亮
+## 选中锚点后高亮
 ```jsx
 import { ImageEditor } from 'image-editor';
 export default () => {
@@ -142,7 +141,7 @@ export default () => {
 }
 ```
 
-更新操作
+## 更新操作
 ```jsx
 import { useRef, useEffect, useState, useMemo, Fragment } from 'react'
 import { ImageEditor, Editor, generateUuid } from 'image-editor';

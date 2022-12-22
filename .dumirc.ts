@@ -5,5 +5,5 @@ export default defineConfig({
   outputPath: 'docs-dist',
   themeConfig: {
     name: 'image-editor',
-  },
+  }
 });

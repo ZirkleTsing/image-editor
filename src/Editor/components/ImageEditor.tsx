@@ -8,17 +8,17 @@ import cls from 'classnames'
 import type { AnchorType, IChangeValue } from '../types'
 
 export interface ImageEditorProps<Extra = any> {
-  style: React.CSSProperties
-  width?: React.CSSProperties['width'] // 优先级低于style
-  height?: React.CSSProperties['height'] // 优先级低于style
-  className?: string
-  anchorClassName?: string // 锚点容器className
-  anchorStyle?: React.CSSProperties // 锚点容器style
   config: {
     anchors: Omit<AnchorType<Extra>, 'uuid'>[]
     imageUrl: string
     anchorUrl?: string
   },
+  style?: React.CSSProperties
+  width?: React.CSSProperties['width'] // 优先级低于style
+  height?: React.CSSProperties['height'] // 优先级低于style
+  className?: string
+  anchorClassName?: string // 锚点容器className
+  anchorStyle?: React.CSSProperties // 锚点容器style
   onChange?: (value: IChangeValue<Extra>) => void
   onDragStart?: (id: string) => void
   onDragEnd?: (id: string) => void
