@@ -7,7 +7,7 @@ import cls from 'classnames'
 
 import type { IChangeValue, EditorFactory } from '../types'
 
-export interface ImageEditorProps<Extra = any> {
+export interface ImageEditorProps<Extra = any, RefObject = any> {
   config: {
     anchors: EditorFactory<Extra>['anchors']
     imageUrl: string
@@ -29,7 +29,7 @@ export interface ImageEditorProps<Extra = any> {
     anchorUrl?: string
     active: boolean // 当前锚点是否被选中
   }) => JSX.Element
-  ref?: React.MutableRefObject<any>
+  ref?: React.MutableRefObject<RefObject>
 }
 
 export const ImageEditor: <T>(props: PropsWithChildren<ImageEditorProps<T>>, ref?: React.MutableRefObject<any>) => JSX.Element
