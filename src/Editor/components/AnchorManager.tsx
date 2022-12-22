@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { observer } from "mobx-react-lite"
 import cls from 'classnames'
 import { useEditor } from './ImageEditorContext'
-import { useDrag } from '../hooks'
 import { isFn } from '../shared'
 
 interface IAnchor {
@@ -12,17 +11,19 @@ interface IAnchor {
   }
   id: string
   extra: any,
-  effect: any
+  effect: (dom: HTMLDivElement, id: string) => void
 }
 
 const Anchor: React.FC<IAnchor> = observer((props) => {
   const { editor, renderItem, anchorClassName, anchorStyle } = useEditor()
   const { position, id, extra, effect, ...others } = props
-  const ref = useDrag(id)
+  const ref = useRef<HTMLDivElement>(null);
   const anchorUrl = editor.anchorUrl
   const active = editor.activeAnchor === id
   useEffect(() => {
-    return effect()
+    if (ref.current) {
+      return effect(ref.current, id)
+    }
   }, [])
 
   return (

@@ -3,10 +3,11 @@ import type { AnchorType, Position, IEditorProps } from '../types'
 import { Editor } from './Editor';
 
 /**
- * Dot 图钉功能
- * 1. 图钉dotUrl,
- * 2. 坐标(x,y),
- * 
+ * 锚点实体
+ * 1. 图钉事件管理
+ * 2. 更新坐标
+ * 3. 更新业务数据
+ * 4. 上报数据
  */
 
 export class Anchor<Extra = any> {
@@ -41,18 +42,61 @@ export class Anchor<Extra = any> {
     return this.uuid
   }
 
-  effect = () => {
-    this.ref = document.querySelector(`[data-image-anchor-id="${this.uuid}"]`)!
-    this.width = this.ref.offsetWidth
-    this.height = this.ref.offsetHeight
-  }
-
   updatePosition = (offset: Position) => {
     const { x, y } = offset
     this.offsetLeft = Math.max(Math.min(this.offsetLeft + x, this.editor.width - this.width), 0)
     this.offsetTop = Math.max(Math.min(this.offsetTop + y, this.editor.height - this.height), 0)
     this.position.x = this.offsetLeft
     this.position.y = this.offsetTop
+  }
+
+  effect = (ref: HTMLDivElement, id: string) => {
+    this.ref = ref
+    this.width = this.ref.offsetWidth
+    this.height = this.ref.offsetHeight
+    const editor = this.editor
+    const onMouseDown = (e: MouseEvent) => {
+      e.preventDefault();
+      editor.onAnchorDragging = true;
+      editor.draggingTarget = id;
+      editor.startPosition = {
+        x: e.pageX,
+        y: e.pageY,
+      };
+      
+      editor.onDragStart?.(id)
+      if (editor.activeAnchor !== id) {
+        editor.onSelect?.(id)
+        editor.activeAnchor = id
+      }
+    }
+
+    // 这里删掉 挪到Editor进行管理，拖拽更丝滑
+    // const onMouseMove = (e: MouseEvent) => {
+    //   e.preventDefault();
+    //   if (editor.onAnchorDragging && editor.draggingTarget === id) {
+    //     let offsetPosition = calcOffset(e, editor);
+    //     editor.updatePosition(id, { x: offsetPosition.x, y: offsetPosition.y });
+    //   }
+    // }
+
+    const onMouseUp = (e: MouseEvent) => {
+      e.preventDefault();
+      editor.onAnchorDragging = false;
+      editor.draggingTarget = '';
+
+      editor.onDragEnd?.(id)
+    }
+
+    this.ref.addEventListener('mousedown', onMouseDown);
+    // ref.addEventListener('mousemove', onMouseMove);
+    this.ref.addEventListener('mouseup', onMouseUp);
+
+    return () => {
+      this.ref?.removeEventListener('mousedown', onMouseDown)
+      // ref?.removeEventListener('mousemove', onMouseMove)
+      this.ref?.removeEventListener('mouseup', onMouseUp)
+    }
   }
 
   static create(anchors: IEditorProps['anchors'], editor: Editor): Anchor[] {
