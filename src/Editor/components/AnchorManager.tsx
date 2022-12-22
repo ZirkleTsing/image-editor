@@ -15,7 +15,7 @@ interface IAnchor {
 }
 
 const Anchor: React.FC<IAnchor> = observer((props) => {
-  const { editor, renderItem } = useEditor()
+  const { editor, renderItem, anchorClassName, anchorStyle } = useEditor()
   const { position, id, extra, effect, ...others } = props
   const ref = useDrag(id)
   const anchorUrl = editor.anchorUrl
@@ -27,13 +27,14 @@ const Anchor: React.FC<IAnchor> = observer((props) => {
   return (
     <div
       ref={ref}
-      className={cls("image-anchor-editor__anchor", { default: !renderItem, active: !renderItem && active })}
+      className={cls("image-anchor-editor__anchor", anchorClassName, { default: !renderItem, active: !renderItem && active })}
       data-image-anchor-id={id}
       style={{
         position: 'absolute',
         left: position.left,
         top: position.top,
-        backgroundImage: renderItem ? undefined : `url('${anchorUrl}')`
+        backgroundImage: renderItem ? undefined : `url('${anchorUrl}')`,
+        ...anchorStyle
       }}
       {...others}
     >

@@ -9,7 +9,11 @@ import type { AnchorType, IChangeValue } from '../types'
 
 export interface ImageEditorProps<Extra = any> {
   style: React.CSSProperties
+  width?: React.CSSProperties['width'] // 优先级低于style
+  height?: React.CSSProperties['height'] // 优先级低于style
   className?: string
+  anchorClassName?: string // 锚点容器className
+  anchorStyle?: React.CSSProperties // 锚点容器style
   config: {
     anchors: Omit<AnchorType<Extra>, 'uuid'>[]
     imageUrl: string
@@ -29,7 +33,7 @@ export interface ImageEditorProps<Extra = any> {
 
 export const ImageEditor: <T>(props: PropsWithChildren<ImageEditorProps<T>>, ref?: React.MutableRefObject<any>) => JSX.Element
   = observer((props, ref) => {
-    const { onChange, onDragStart, onDragEnd, onSelect, renderItem } = props
+    const { onChange, onDragStart, onDragEnd, onSelect, renderItem, anchorClassName, anchorStyle } = props
     const containerRef = useRef<HTMLDivElement | null>(null)
     const [editor, setEditorInstance] = useState<Editor>(undefined as unknown as Editor)
     useEffect(() => {
@@ -50,9 +54,10 @@ export const ImageEditor: <T>(props: PropsWithChildren<ImageEditorProps<T>>, ref
     }, [])
     
     return (
-      <ImageEditorContext.Provider value={{ editor, renderItem }}>
+      <ImageEditorContext.Provider value={{ editor, renderItem, anchorClassName, anchorStyle }}>
         <div
           ref={containerRef}
+          style={{ width: props.width, height: props.height, ...props.style }}
           className={cls('image-anchor-editor', props.className)}
         >
           <AnchorManager />
