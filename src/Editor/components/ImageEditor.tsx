@@ -5,14 +5,18 @@ import { AnchorManager } from './AnchorManager'
 import { ImageEditorContext } from './ImageEditorContext'
 import cls from 'classnames'
 
-import type { IChangeValue, EditorFactory } from '../types'
+import type { IChangeValue, Position } from '../types'
 
 export interface ImageEditorProps<Extra = any, RefObject = any> {
   /**
-   * anchors 初始锚点配置 imageUrl 图片url地址 anchorUrl 锚点url地址
+   * @description anchors 初始锚点配置 imageUrl 图片url地址 anchorUrl 锚点url地址
    */
   config: {
-    anchors: EditorFactory<Extra>['anchors']
+    anchors: Array<{
+      uuid?: string // 唯一id
+      position: Position // 画布坐标
+      extra: Extra // 业务数据
+    }>
     imageUrl: string
     anchorUrl?: string
   },
@@ -83,7 +87,7 @@ export interface ImageEditorProps<Extra = any, RefObject = any> {
 export const ImageEditor: <T>(props: PropsWithChildren<ImageEditorProps<T>>, ref?: React.MutableRefObject<any>) => JSX.Element
   = observer((props, ref) => {
     const { onChange, onDragStart, onDragEnd, onSelect, renderItem, anchorClassName, anchorStyle, root } = props
-    const containerRef = useRef<HTMLDivElement | null>(null)
+    const containerRef = useRef<HTMLDivElement>(null)
     const [editor, setEditorInstance] = useState<Editor>(undefined as unknown as Editor)
     useEffect(() => {
       const editor = Editor.create(containerRef.current as HTMLElement, {
