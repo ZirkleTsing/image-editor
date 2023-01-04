@@ -7,7 +7,7 @@ import cls from 'classnames'
 
 import type { IChangeValue, Position } from '../types'
 
-export interface ImageEditorProps<Extra = any, RefObject = any> {
+export interface ImageEditorProps<Extra = any, Target = any> {
   /**
    * @description anchors 初始锚点配置 imageUrl 图片url地址 anchorUrl 锚点url地址
    */
@@ -77,7 +77,7 @@ export interface ImageEditorProps<Extra = any, RefObject = any> {
     anchorUrl?: string
     active: boolean
   }) => JSX.Element
-  ref?: React.MutableRefObject<RefObject>
+  ref?: React.MutableRefObject<Target>
   /**
    * @description 事件管理的代理对象，默认是画布Editor
    */
