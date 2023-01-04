@@ -1,0 +1,192 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Editor.ts</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="../../../../assets/source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../../../assets/source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="../../../../index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="positive"><td class="">src/Editor/models/Editor.ts</td><td class="">100.00%</td><td class="">80%</td><td class="">321</td><td class="">321</td><td class="">0</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">import { generate } from &#x27;short-uuid&#x27;
+import { makeObservable, observable, computed, action, toJS } from &#x27;mobx&#x27;
+import { Anchor } from &#x27;./Anchor&#x27;
+import { calcOffset } from &#x27;../shared&#x27;
+import type { IEditorProps, EditorFactory, Position, IChangeValue, AnchorType } from &#x27;../types&#x27;
+
+/**
+ * Editor实体
+ * 1. 初始化 DONE
+ *  - 背景图片 imgUrl DONE
+ *    -- dom尺寸初始化计算 DONE
+ *  - 图片尺寸裁减居中 DONE
+ *  - 图钉生成的初始坐标，不能重叠 TODO
+ * 2. 创建图钉实例 DONE
+ * 3. 删除图钉实例 DONE
+ * 4. 变更图钉实例 DONE
+ * 5. 管理拖拽状态，正在拖拽的实例 DONE
+ * 6. 画布的事件管理 DONE
+ *      -- 选中节点
+ *      -- 开始拖拽
+ *      -- 拖拽中
+ *      -- 拖拽结束
+ *      -- 上报信息
+ *  == 工厂方法 ==
+ *  生成 Editor 的方法 imageEditor.create(ref, {}) DONE
+ *    -- anchor uuid的工厂函数 DONE
+ * 
+ */
+
+export class Editor&lt;Extra = any&gt; {
+  private ref: HTMLElement
+  width: number
+  height: number
+  imgUrl: string
+  anchorUrl?: string
+  pageX: number
+  pageY: number
+  onAnchorDragging = false
+  draggingTarget = &#x27;&#x27;
+  anchors: Anchor&lt;Extra&gt;[] 
+  initialAnchors: AnchorType&lt;Extra&gt;[] // 画布初始的锚点配置
+  activeAnchor = &#x27;&#x27; // 当前选中的锚点
+  onChange?: (value: IChangeValue&lt;Extra&gt;) =&gt; void
+  onDragStart?: (id: string) =&gt; void
+  onDragEnd?: (id: string) =&gt; void
+  onSelect?: (id: string) =&gt; void
+  startPosition: Position = {
+    x: 0,
+    y: 0
+  }
+  root?: HTMLElement
+
+  constructor(props: IEditorProps&lt;Extra&gt;) {
+    this.ref = props.domRef
+    this.width = props.domRef.clientWidth // 不包含border的宽度
+    this.height = props.domRef.clientHeight // 不包含border的宽度
+    this.root = props.root
+    const rect = props.domRef.getBoundingClientRect()
+    this.pageX = rect.left
+    this.pageY = rect.top
+    this.imgUrl = props.imageUrl
+    this.anchorUrl = props.anchorUrl
+    this.initialAnchors = toJS(props.anchors)
+    this.onChange = props.onChange
+    this.onDragStart = props.onDragStart
+    this.onDragEnd = props.onDragEnd
+    this.onSelect = props.onSelect
+    this.init()
+    this.anchors = Anchor.create(props.anchors, this)
+    
+    makeObservable(this, {
+      anchors: observable,
+      onAnchorDragging: observable,
+      draggingTarget: observable,
+      activeAnchor: observable,
+      anchorMeta: computed,
+      context: computed,
+      startPosition: observable.struct,
+      updatePosition: action,
+      createAnchor: action,
+      updateAnchor: action,
+      deleteAnchor: action,
+    })
+  }
+
+  private init = () =&gt; {
+    this.ref.style.backgroundImage = `url(&#x27;${this.imgUrl}&#x27;)`
+  }
+
+  get anchorMeta() {
+    return this.anchors?.map(anchor =&gt; {
+      return {
+        left: anchor.offsetLeft,
+        top: anchor.offsetTop,
+        id: anchor.uuid,
+        extra: anchor.extra,
+        effect: anchor.effect
+      }
+    })
+  }
+  
+  get context() {
+    return {
+      anchors: this.anchors.map(anchor =&gt; {
+        return {
+          uuid: anchor.id,
+          position: anchor.position,
+          extra: anchor.extra
+        }
+      })
+    }
+  }
+
+  updatePosition = (id: string, position: Position) =&gt; {
+    const anchor = this.anchors.find(anchor =&gt; {
+      return anchor.id === id
+    })!
+    anchor.updatePosition(position)
+  }
+
+  createAnchor = (config: Omit&lt;AnchorType&lt;Extra&gt;, &#x27;uuid&#x27;&gt;) =&gt; {
+    const anchor = new Anchor({
+      ...config,
+      uuid: generate()
+    }, this)
+    this.anchors.push(anchor)
+  }
+  
+  updateAnchor = (id: string, extra: Extra) =&gt; {
+    const index = this.anchors.findIndex(anchor =&gt; anchor.id === id)
+    this.anchors[index].extra = extra
+  }
+
+  deleteAnchor = (id: string) =&gt; {
+    const index = this.anchors.findIndex(anchor =&gt; anchor.id === id)
+    this.anchors.splice(index, 1)
+  }
+
+  effect = () =&gt; {
+    const ref = this.root ?? this.ref
+    const onMouseUp = () =&gt; {
+      this.draggingTarget = &#x27;&#x27;
+      this.onAnchorDragging = false
+      this.onChange?.(this.context)
+    }
+    const onMouseMove = (e: MouseEvent) =&gt; {
+      e.preventDefault();
+      if (this.onAnchorDragging) {
+        const id = this.draggingTarget
+        let offsetPosition = calcOffset(e, this);
+        this.updatePosition(id, { x: offsetPosition.x, y: offsetPosition.y });
+      }
+    }
+
+    ref.addEventListener(&#x27;mouseup&#x27;, onMouseUp)
+    ref.addEventListener(&#x27;mousemove&#x27;, onMouseMove)
+    return () =&gt; {
+      ref.removeEventListener(&#x27;mouseup&#x27;, onMouseUp)
+      ref.removeEventListener(&#x27;mousemove&#x27;, onMouseMove)
+    }
+  }
+
+  static create = &lt;Extra = any&gt;(ref: HTMLElement, props: EditorFactory&lt;Extra&gt;): Editor&lt;Extra&gt; =&gt; {
+    return new Editor&lt;Extra&gt;({
+      domRef: ref,
+      ...props,
+      anchors: props.anchors?.map(anchor =&gt; {
+        return {
+          ...anchor,
+          uuid: anchor.uuid ?? generate()
+        }
+      })
+    })
+  }
+}</textarea><pre id="annotations" style="display:none">[]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Wed, 04 Jan 2023 05:33:26 GMT</p>
+    </body>
+  </html>
+  

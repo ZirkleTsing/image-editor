@@ -1,0 +1,138 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>ImageEditor.tsx</title>
+      <link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" type="text/css" rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/mode/javascript/javascript.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.2/codemirror.min.css" type="text/css" rel="stylesheet">
+<script src="../../../../assets/source-file.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../../../assets/source-file.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+    <div style="margin-top:3em" class="ui container"><h1 class="ui header"><a href="../../../../index.html">TypeScript coverage report</a></h1><table style="margin-top:2em" class="ui celled table"><thead class=""><tr class=""><th class="">Filename</th><th class="">Percent</th><th class="">Threshold</th><th class="">Total</th><th class="">Covered</th><th class="">Uncovered</th></tr></thead><tbody class=""><tr class="positive"><td class="">src/Editor/components/ImageEditor.tsx</td><td class="">99.32%</td><td class="">80%</td><td class="">147</td><td class="">146</td><td class="">1</td></tr></tbody></table><textarea id="editor" readonly="" style="margin-top:3em">import React, { PropsWithChildren, useEffect, useRef, useState } from &#x27;react&#x27;
+import { observer } from &quot;mobx-react-lite&quot;
+import { Editor } from &#x27;../models&#x27;
+import { AnchorManager } from &#x27;./AnchorManager&#x27;
+import { ImageEditorContext } from &#x27;./ImageEditorContext&#x27;
+import cls from &#x27;classnames&#x27;
+
+import type { IChangeValue, Position } from &#x27;../types&#x27;
+
+export interface ImageEditorProps&lt;Extra = any, Target = any&gt; {
+  /**
+   * @description anchors 初始锚点配置 imageUrl 图片url地址 anchorUrl 锚点url地址
+   */
+  config: {
+    anchors: Array&lt;{
+      uuid?: string // 唯一id
+      position: Position // 画布坐标
+      extra: Extra // 业务数据
+    }&gt;
+    imageUrl: string
+    anchorUrl?: string
+  },
+  /**
+   * @description 图片容器style
+   */
+  style?: React.CSSProperties
+  /**
+   * @description 图片容器宽度 优先级低于style
+   */
+  width?: React.CSSProperties[&#x27;width&#x27;]
+  /**
+   * @description 图片容器高度 优先级低于style
+   */
+  height?: React.CSSProperties[&#x27;height&#x27;]
+   /**
+   * @description 图片容器className
+   */
+  className?: string
+  /**
+   * @description 锚点容器className
+   */
+  anchorClassName?: string
+  /**
+   * @description 锚点容器style
+   */
+  anchorStyle?: React.CSSProperties
+  /**
+   * @description 拖拽结束时触发
+   * @param value 
+   * @returns 
+   */
+  onChange?: (value: IChangeValue&lt;Extra&gt;) =&gt; void
+  /**
+   * 拖拽开始
+   */
+  onDragStart?: (id: string) =&gt; void
+  /**
+   * @description 拖拽开始时触发
+   * @param id 拖拽的锚点id
+   * @returns 
+   */
+  onDragEnd?: (id: string) =&gt; void
+  /**
+   * @description 锚点被选中时触发
+   * @param id 被选中的锚点id
+   * @returns 
+   */
+  onSelect?: (id: string) =&gt; void
+  /**
+   * @description 自定义锚点元素
+   * @param context extra是业务逻辑数据，active是否被选中
+   * @returns 
+   */
+  renderItem?: (context: {
+    extra: Extra
+    imageUrl: string
+    anchorUrl?: string
+    active: boolean
+  }) =&gt; JSX.Element
+  ref?: React.MutableRefObject&lt;Target&gt;
+  /**
+   * @description 事件管理的代理对象，默认是画布Editor
+   */
+  root?: HTMLElement
+}
+
+export const ImageEditor: &lt;T&gt;(props: PropsWithChildren&lt;ImageEditorProps&lt;T&gt;&gt;, ref?: React.MutableRefObject&lt;any&gt;) =&gt; JSX.Element
+  = observer((props, ref) =&gt; {
+    const { onChange, onDragStart, onDragEnd, onSelect, renderItem, anchorClassName, anchorStyle, root } = props
+    const containerRef = useRef&lt;HTMLDivElement&gt;(null)
+    const [editor, setEditorInstance] = useState&lt;Editor&gt;(undefined as unknown as Editor)
+    useEffect(() =&gt; {
+      const editor = Editor.create(containerRef.current as HTMLElement, {
+        anchorUrl: &#x27;https://img.alicdn.com/imgextra/i1/O1CN01QZC5lz288ky8Wx98Q_!!6000000007888-2-tps-200-200.png&#x27;,
+        ...props.config,
+        onChange,
+        onDragStart,
+        onDragEnd,
+        onSelect,
+        root
+      })
+      setEditorInstance(editor)
+      if (ref) {
+        ref.current = editor
+      }
+
+      return editor.effect()
+    }, [])
+    
+    return (
+      &lt;ImageEditorContext.Provider value={{ editor, renderItem, anchorClassName, anchorStyle }}&gt;
+        &lt;div
+          ref={containerRef}
+          style={{ width: props.width, height: props.height, ...props.style }}
+          className={cls(&#x27;image-anchor-editor&#x27;, props.className)}
+        &gt;
+          &lt;AnchorManager /&gt;
+        &lt;/div&gt;
+      &lt;/ImageEditorContext.Provider&gt;
+    )
+  }, { forwardRef: true })</textarea><pre id="annotations" style="display:none">[{&quot;file&quot;:&quot;src/Editor/components/ImageEditor.tsx&quot;,&quot;line&quot;:103,&quot;character&quot;:12,&quot;text&quot;:&quot;current&quot;,&quot;kind&quot;:1}]</pre></div>
+    <p class="footer-text">TypeScript Coverage Report generated by <a href="https://github.com/plantain-00/type-coverage">type-coverage</a> and <a href="https://github.com/alexcanessa/typescript-coverage-report">typescript-coverage-report</a> at Wed, 04 Jan 2023 05:33:26 GMT</p>
+    </body>
+  </html>
+  

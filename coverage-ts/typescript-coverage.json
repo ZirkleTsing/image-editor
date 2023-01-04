@@ -1,0 +1,65 @@
+{
+  "fileCounts": {},
+  "anys": [
+    {
+      "file": "src/Editor/models/Anchor.ts",
+      "line": 29,
+      "character": 23,
+      "text": "extra",
+      "kind": 1
+    },
+    {
+      "file": "src/Editor/shared.ts",
+      "line": 20,
+      "character": 21,
+      "text": "val",
+      "kind": 1
+    },
+    {
+      "file": "src/Editor/shared.ts",
+      "line": 20,
+      "character": 71,
+      "text": "val",
+      "kind": 1
+    },
+    {
+      "file": "src/Editor/shared.ts",
+      "line": 20,
+      "character": 43,
+      "text": "args",
+      "kind": 1
+    },
+    {
+      "file": "src/Editor/components/AnchorManager.tsx",
+      "line": 12,
+      "character": 2,
+      "text": "extra",
+      "kind": 1
+    },
+    {
+      "file": "src/Editor/components/AnchorManager.tsx",
+      "line": 18,
+      "character": 24,
+      "text": "extra",
+      "kind": 1
+    },
+    {
+      "file": "src/Editor/components/AnchorManager.tsx",
+      "line": 42,
+      "character": 94,
+      "text": "extra",
+      "kind": 1
+    },
+    {
+      "file": "src/Editor/components/ImageEditor.tsx",
+      "line": 103,
+      "character": 12,
+      "text": "current",
+      "kind": 1
+    }
+  ],
+  "percentage": 99.12663755458516,
+  "total": 916,
+  "covered": 908,
+  "uncovered": 8
+}
