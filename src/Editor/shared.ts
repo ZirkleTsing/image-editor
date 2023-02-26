@@ -19,3 +19,15 @@ export const generateUuid = () => {
 }
 
 export const isFn = (val: any): val is (...args: any) => any => typeof val === 'function'
+
+export const formatNum = (num: string) => {
+  const value = Math.round(parseFloat(num) * 100) / 100
+  const arrayNum = value.toString().split('.');
+  if (arrayNum.length === 1) {
+    return value.toString() + '.00'
+  }
+  if (arrayNum[1].length < 2) {
+    return value.toString() + '0'
+  }
+  return value
+}

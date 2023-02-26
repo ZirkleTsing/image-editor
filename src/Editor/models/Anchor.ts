@@ -24,8 +24,8 @@ export class Anchor<Extra = any> {
   constructor(props: AnchorType, editor: Editor) {
     this.position = props.position
     this.uuid = props.uuid
-    this.offsetLeft = this.position.x
-    this.offsetTop = this.position.y
+    this.offsetLeft = parseInt(String(this.position.x * editor.width))
+    this.offsetTop =  parseInt(String(this.position.y * editor.height))
     this.anchorUrl = editor.anchorUrl
     this.extra = props.extra
     this.editor = editor
@@ -46,8 +46,8 @@ export class Anchor<Extra = any> {
     const { x, y } = offset
     this.offsetLeft = Math.max(Math.min(this.offsetLeft + x, this.editor.width - this.width), 0)
     this.offsetTop = Math.max(Math.min(this.offsetTop + y, this.editor.height - this.height), 0)
-    this.position.x = this.offsetLeft
-    this.position.y = this.offsetTop
+    // this.position.x = this.offsetLeft
+    // this.position.y = this.offsetTop
   }
 
   effect = (ref: HTMLDivElement, id: string) => {
