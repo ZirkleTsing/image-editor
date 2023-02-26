@@ -161,7 +161,6 @@ export class Editor<Extra = any> {
       // 找到了去更新
       this.anchors[index].extra = extra;
     }
-
     this.onChange?.(this.context)
   };
 
@@ -169,11 +168,13 @@ export class Editor<Extra = any> {
     const index = this.anchors.findIndex((anchor) => anchor.id === id);
     if (index !== -1) {
       this.anchors.splice(index, 1);
+      this.onChange?.(this.context)
     }
   };
 
   clearAnchor = () => {
     this.anchors = []
+    this.onChange?.(this.context)
   }
 
   updateBackgroundImage = (url: string) => {
