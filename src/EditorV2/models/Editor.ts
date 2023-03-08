@@ -28,7 +28,8 @@ class Editor {
       files: observable,
       container: observable,
       width: observable,
-      height: observable
+      height: observable,
+      effect: action
     });
   }
 

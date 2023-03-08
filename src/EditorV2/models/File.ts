@@ -1,7 +1,7 @@
 
 import { makeObservable, observable, action, computed } from 'mobx';
 import { isFile, isNull } from '../shared'
-import { getObjectURL, dataURLtoFile } from '../internal'
+import { getObjectURL, dataURLtoFile, calcImageSize } from '../internal'
 import type { Editor } from '.'
 
 interface ImageFileProps {
@@ -21,11 +21,12 @@ class ImageFile {
       fileName: observable,
       data: observable,
       fetching: observable,
+      editor: observable,
       loaded: computed,
       name: computed,
       content: computed,
       read: action,
-      getImageFileAdaptToCanvas: action
+      // getImageFileAdaptToCanvas: action
     })
   }
 
@@ -80,11 +81,15 @@ class ImageFile {
       const img = new Image();
       img.src = url;
       img.crossOrigin = 'Anonymous';
-      img.onload = function () {
+      img.onload = () => {
         const cvs = document.createElement('canvas');
         const ctx = cvs.getContext('2d');
-        cvs.width = img.width;
-        cvs.height = img.height;
+        // const editorWidth = this.editor.width
+        // const editorHeight = this.editor.height
+        const { width, height } = calcImageSize(img, this.editor)
+        cvs.width = width;
+        cvs.height = height;
+        // console.log('@:', img.height, editorHeight)
         const sx = 0;
         const sy = 0;
         ctx?.drawImage(
@@ -103,7 +108,7 @@ class ImageFile {
           err: null,
         });
       };
-      img.onerror = function (err) {
+      img.onerror = (err) => {
         resolve({ file: null, err });
       };
     });

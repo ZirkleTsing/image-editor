@@ -18,7 +18,7 @@ const Image: React.FC<ImageProps> = observer((props) => {
   }
 
   return (
-    <img src={image.content || ''} />
+    <img className='image-editor__img' onDragStart={(e) => e.preventDefault()} src={image.content || ''} />
   )
 })
 
