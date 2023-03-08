@@ -1,7 +1,9 @@
 ---
 hero:
   title: 图片编辑器
-  description: image-editor 
+  actions:
+    - text: 组件文档
+      link: /components/editor
 ---
 
-image-editor
+<!-- image-editor -->
