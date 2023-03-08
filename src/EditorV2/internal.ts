@@ -38,13 +38,11 @@ export const calcImageSize = (image: HTMLImageElement, editorSize: Size, ): Size
   const imageHeight = image.height
   const imageWidth = image.width
   const editorHeight = editorSize.height
-  const editorWidth = editorSize.width
-
   // 目标 不能出现垂直滚动
   if (imageHeight > editorHeight - threshold) {
     return {
       height: editorHeight - threshold,
-      width: ((editorHeight - threshold) / imageHeight) * editorWidth
+      width: ((editorHeight - threshold) / imageHeight) * imageWidth
     }
   }
 

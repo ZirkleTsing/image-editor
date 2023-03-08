@@ -96,8 +96,8 @@ class ImageFile {
           img,
           sx,
           sy,
-          cvs.width,
-          cvs.height,
+          img.width, // 裁剪原图片的尺寸
+          img.height, // 裁剪原图片的尺寸
           0,
           0,
           cvs.width,
