@@ -1,11 +1,13 @@
 import { makeObservable, observable, action, computed } from 'mobx';
 import { WorkSpace } from '.';
+import { WorkSpaceProps } from './WorkSpace'
 
 type ImageFiles = File[] | string[];
 
 interface EditorProps {
   files: ImageFiles;
   ref: string
+  positions?: WorkSpaceProps['positions']
 }
 
 class Editor {
@@ -16,8 +18,7 @@ class Editor {
   workspaces: Array<WorkSpace>
   activeId: string
   constructor(props: EditorProps) {
-    this.workspaces = props.files.map((file) => new WorkSpace({ file }, this))
-    console.log('this:', this.workspaces)
+    this.workspaces = props.files.map((file) => new WorkSpace({ file, positions: props.positions }, this))
     this.ref = props.ref
     this.activeId = this.workspaces.length > 0 ? this.workspaces[0].id : ''
     makeObservable(this, {

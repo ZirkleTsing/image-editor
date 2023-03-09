@@ -10,6 +10,9 @@ export default () => {
   return (
     <ImageEditorV2
       containerStyle={{ width: 800, height: 800 }}
+      positions={[
+        { left: '20', top: '20', width: '100', height: '100' }
+      ]}
       images={[
         'https://images.pexels.com/photos/3791466/pexels-photo-3791466.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
         'https://images.pexels.com/photos/36487/above-adventure-aerial-air.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',

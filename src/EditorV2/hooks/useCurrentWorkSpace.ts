@@ -1,9 +1,9 @@
 import { useEditor } from '../components'
 
-const useWorkSpace = () => {
+const useCurrentWorkSpace = () => {
   const { editor } = useEditor()
 
   return editor.current
 }
 
-export default useWorkSpace
+export default useCurrentWorkSpace

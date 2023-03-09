@@ -1,4 +1,5 @@
 import { makeObservable, observable, action, computed } from 'mobx';
+import { generateUuid } from '../shared'
 import { Editor } from '.'
 
 export interface IClipProps {
@@ -16,9 +17,11 @@ class Clip {
   clipWidth: string = '100'
   clipHeight: string = '100'
   editor: Editor
+  id: string
 
   constructor(props: IClipProps, editor: Editor) {
     this.editor = editor
+    this.id = generateUuid()
     this.initialize(props)
     
     makeObservable(this, {
@@ -27,6 +30,7 @@ class Clip {
       clipWidth: observable,
       clipHeight: observable,
       editor: observable,
+      id: observable,
       left: computed,
       top: computed,
       height: computed,

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Spin } from 'antd'
 import { useEditor } from './ImageEditorContext';
-import { useWorkSpace } from '../hooks'
+import { useCurrentClip, useCurrentWorkSpace } from '../hooks'
 import type { WorkSpace } from '../models'
 
 interface TabItemProps {
@@ -31,8 +31,9 @@ const TabItem: React.FC<TabItemProps> = observer((props) => {
 
 const ToolBar = observer(() => {
   const { editor, containerStyle } = useEditor();
-  const currentWorkSpace = useWorkSpace()
-
+  const currentClip = useCurrentClip()
+  const currentWorkSpace = useCurrentWorkSpace()
+  console.log('currentClip:', currentClip)
   const renderTab = () => {
     if (editor.workspaces.length < 2) {
       return null
@@ -45,22 +46,26 @@ const ToolBar = observer(() => {
   const renderController = () => {
     return (
       <div className="image-editor__files-controller" style={{ width: containerStyle?.width }}>
-        <div className='image-editor__files-controller__item'>
-          <span className="label">X:&nbsp;</span>
-          <input type="number" value={currentWorkSpace.clip.left} onChange={e => { currentWorkSpace.clip.left = e.target.value }} />
-        </div>
-        <div className='image-editor__files-controller__item'>
-          <span className="label">Y:&nbsp;</span>
-          <input type="number" value={currentWorkSpace.clip.top} onChange={e => { currentWorkSpace.clip.top = e.target.value }} />
-        </div>
-        <div className='image-editor__files-controller__item'>
-          <span className="label">W:&nbsp;</span>
-          <input type="number" value={currentWorkSpace.clip.width} onChange={e => { currentWorkSpace.clip.width = e.target.value }} />
-        </div>
-        <div className='image-editor__files-controller__item'>
-          <span className="label">H:&nbsp;</span>
-          <input type="number" value={currentWorkSpace.clip.height} onChange={e => { currentWorkSpace.clip.height = e.target.value }} />
-        </div>
+        {currentClip && (
+          <Fragment>
+            <div className='image-editor__files-controller__item'>
+            <span className="label">X:&nbsp;</span>
+            <input type="number" value={currentClip.left} onChange={e => { currentClip.left = e.target.value }} />
+          </div>
+          <div className='image-editor__files-controller__item'>
+            <span className="label">Y:&nbsp;</span>
+            <input type="number" value={currentClip.top} onChange={e => { currentClip.top = e.target.value }} />
+          </div>
+          <div className='image-editor__files-controller__item'>
+            <span className="label">W:&nbsp;</span>
+            <input type="number" value={currentClip.width} onChange={e => { currentClip.width = e.target.value }} />
+          </div>
+          <div className='image-editor__files-controller__item'>
+            <span className="label">H:&nbsp;</span>
+            <input type="number" value={currentClip.height} onChange={e => { currentClip.height = e.target.value }} />
+          </div>
+          </Fragment>
+        )}
         <div className='image-editor__files-controller__item'>
           <span className="label">P:&nbsp;</span>
           <span className="value">{currentWorkSpace.file.naturalWidth}*{currentWorkSpace.file.naturalHeight}</span>
