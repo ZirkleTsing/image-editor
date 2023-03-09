@@ -2,6 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Spin } from 'antd'
 import { useEditor } from './ImageEditorContext';
+import { useWorkSpace } from '../hooks'
 import type { WorkSpace } from '../models'
 
 interface TabItemProps {
@@ -30,6 +31,7 @@ const TabItem: React.FC<TabItemProps> = observer((props) => {
 
 const ToolBar = observer(() => {
   const { editor, containerStyle } = useEditor();
+  const currentWorkSpace = useWorkSpace()
 
   const renderTab = () => {
     if (editor.workspaces.length < 2) {
@@ -45,27 +47,27 @@ const ToolBar = observer(() => {
       <div className="image-editor__files-controller" style={{ width: containerStyle?.width }}>
         <div className='image-editor__files-controller__item'>
           <span className="label">X:&nbsp;</span>
-          <input type="number" />
+          <input type="number" value={currentWorkSpace.clip.left} onChange={e => { currentWorkSpace.clip.left = e.target.value }} />
         </div>
         <div className='image-editor__files-controller__item'>
           <span className="label">Y:&nbsp;</span>
-          <input type="number" />
+          <input type="number" value={currentWorkSpace.clip.top} onChange={e => { currentWorkSpace.clip.top = e.target.value }} />
         </div>
         <div className='image-editor__files-controller__item'>
           <span className="label">W:&nbsp;</span>
-          <input type="number" />
+          <input type="number" value={currentWorkSpace.clip.width} onChange={e => { currentWorkSpace.clip.width = e.target.value }} />
         </div>
         <div className='image-editor__files-controller__item'>
           <span className="label">H:&nbsp;</span>
-          <input type="number" />
+          <input type="number" value={currentWorkSpace.clip.height} onChange={e => { currentWorkSpace.clip.height = e.target.value }} />
         </div>
         <div className='image-editor__files-controller__item'>
           <span className="label">P:&nbsp;</span>
-          <span className="value">{editor.current.file.naturalWidth}*{editor.current.file.naturalHeight}</span>
+          <span className="value">{currentWorkSpace.file.naturalWidth}*{currentWorkSpace.file.naturalHeight}</span>
         </div>
         <div className='image-editor__files-controller__item'>
           <span className="label">S:&nbsp;</span>
-          <span className="value">{editor.current.file.size}</span>
+          <span className="value">{currentWorkSpace.file.size}</span>
         </div>
       </div>
     )

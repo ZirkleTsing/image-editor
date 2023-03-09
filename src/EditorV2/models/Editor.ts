@@ -41,12 +41,10 @@ class Editor {
   }
 
   select(id: string) {
-    console.log('点击:', id)
     this.activeId = id
   }
 
   get current() {
-    console.log('变化')
     return this.workspaces.find(workSpace => workSpace.id === this.activeId) as WorkSpace
   }
 
