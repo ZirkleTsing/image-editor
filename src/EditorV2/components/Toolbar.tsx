@@ -27,20 +27,57 @@ const TabItem: React.FC<TabItemProps> = observer((props) => {
 })
 
 const ToolBar = observer(() => {
-  const { editor } = useEditor();
+  const { editor, containerStyle } = useEditor();
 
   const renderTab = () => {
+    if (editor.files.length < 2) {
+      return null
+    }
     return editor.files.map((file) => {
       return <TabItem key={file.id} file={file} />;
     });
   };
 
+  const renderController = () => {
+    return (
+      <div className="image-editor__files-controller" style={{ width: containerStyle?.width }}>
+        <div className='image-editor__files-controller__item'>
+          <span className="label">X:&nbsp;</span>
+          <input type="number" />
+        </div>
+        <div className='image-editor__files-controller__item'>
+          <span className="label">Y:&nbsp;</span>
+          <input type="number" />
+        </div>
+        <div className='image-editor__files-controller__item'>
+          <span className="label">W:&nbsp;</span>
+          <input type="number" />
+        </div>
+        <div className='image-editor__files-controller__item'>
+          <span className="label">H:&nbsp;</span>
+          <input type="number" />
+        </div>
+        <div className='image-editor__files-controller__item'>
+          <span className="label">P:&nbsp;</span>
+          <span className="value">{editor.current.naturalWidth}*{editor.current.naturalHeight}</span>
+        </div>
+        <div className='image-editor__files-controller__item'>
+          <span className="label">S:&nbsp;</span>
+          <span className="value">{editor.current.size}</span>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div
-      onDragStart={(e) => e.preventDefault()}
-      className="image-editor__files-tab"
-    >
-      {renderTab()}
+    <div>
+      <div
+        onDragStart={(e) => e.preventDefault()}
+        className="image-editor__files-tab"
+      >
+        {renderTab()}
+      </div>
+      {renderController()}
     </div>
   );
 });

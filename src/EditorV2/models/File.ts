@@ -1,7 +1,7 @@
 
 import { makeObservable, observable, action, computed } from 'mobx';
 import { isFile, isNull, generateUuid } from '../shared'
-import { getObjectURL, dataURLtoFile, calcImageSize } from '../internal'
+import { getObjectURL, dataURLtoFile, calcImageSize, toImage, toSize } from '../internal'
 import type { Editor } from '.'
 
 interface ImageFileProps {
@@ -15,6 +15,11 @@ class ImageFile {
   id: string
   fetching: boolean = false
   editor: Editor
+  // 像素
+  naturalHeight: number = 0
+  naturalWidth: number = 0
+  // 大小
+  size: string = ''
   constructor(props: ImageFileProps, editor: Editor) {
     this.editor = editor
     const { file } = props
@@ -28,6 +33,9 @@ class ImageFile {
       fetching: observable,
       editor: observable,
       id: observable,
+      naturalHeight: observable,
+      naturalWidth: observable,
+      size: observable,
       loaded: computed,
       name: computed,
       content: computed,
@@ -58,13 +66,17 @@ class ImageFile {
     if (this.data) return Promise.resolve(this.data)
     this.fetching = true
     return new Promise<any>((resolve, reject) => {
-      this.getImageFileAdaptToCanvas(this.originFile, this.fileName).then(({ file, err }) => {
+      this.getImageFileAdaptToCanvas(this.originFile, this.fileName).then(async ({ file, err }) => {
         if (err || isNull(file)) {
           console.warn('图像资源加载失败')
           reject(err)
         } else {
           this.data = getObjectURL(file)
           this.fetching = false
+          const img = await toImage(this.data)
+          this.naturalHeight = img.naturalHeight
+          this.naturalWidth = img.naturalWidth
+          this.size = toSize(file.size)
           resolve(this.data)
         }
       })

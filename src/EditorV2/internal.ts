@@ -51,3 +51,31 @@ export const calcImageSize = (image: HTMLImageElement, editorSize: Size, ): Size
     width: imageWidth
   }
 }
+
+/* url转img对象 */
+export const toImage = (url: string): Promise<HTMLImageElement> => {
+  return new Promise((resolve) => {
+      let img = new Image()
+      img.src = typeof (url) === 'string' ? url : getObjectURL(url)
+      img.onload = function () {
+        resolve(img)
+      }
+  })
+};
+
+// 通过字节计算文件大小
+export const toSize = (bytes: File['size']): string => {
+  let _bytes = bytes
+  const symbols = ["bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+  let exp = Math.floor(Math.log(bytes) / Math.log(2));
+  if (exp < 1) {
+      exp = 0;
+  }
+  const i = Math.floor(exp / 10);
+  _bytes = _bytes / Math.pow(2, 10 * i);
+
+  if (_bytes.toString().length > _bytes.toFixed(2).toString().length) {
+      _bytes = Number(_bytes.toFixed(2));
+  }
+  return _bytes + " " + symbols[i];
+}
