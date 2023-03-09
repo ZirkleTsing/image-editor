@@ -1,5 +1,5 @@
 import { makeObservable, observable, action, computed } from 'mobx';
-import { ImageFile } from '.';
+import { WorkSpace } from '.';
 
 type ImageFiles = File[] | string[];
 
@@ -9,19 +9,19 @@ interface EditorProps {
 }
 
 class Editor {
-  files: ImageFile[] = [];
   ref: string
   container: HTMLDivElement | null = null
   width: number = 0
   height: number = 0
+  workspaces: Array<WorkSpace>
   activeId: string
-
   constructor(props: EditorProps) {
-    this.files = props.files.map((file) => new ImageFile({ file }, this));
+    this.workspaces = props.files.map((file) => new WorkSpace({ file }, this))
+    // this.files = props.files.map((file) => new ImageFile({ file }, this));
     this.ref = props.ref
-    this.activeId = this.files[0]?.id
+    this.activeId = this.workspaces.length > 0 ? this.workspaces[0].id : ''
     makeObservable(this, {
-      files: observable,
+      workspaces: observable,
       container: observable,
       width: observable,
       height: observable,
@@ -45,7 +45,7 @@ class Editor {
   }
 
   get current() {
-    return this.files.find(file => file.id === this.activeId) as ImageFile
+    return this.workspaces.find(workSpace => workSpace.id === this.activeId) as WorkSpace
   }
 
 }

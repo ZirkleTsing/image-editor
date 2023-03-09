@@ -28,7 +28,7 @@ const Canvas = observer(() => {
   console.log('editor.', editor.current)
   return (
     <div className={cls('image-editor', className)} style={containerStyle}>
-      <Image image={editor.current} />
+      <Image image={editor.current.file} />
     </div>
   )
 })

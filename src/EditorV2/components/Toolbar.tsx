@@ -16,11 +16,11 @@ const TabItem: React.FC<TabItemProps> = observer((props) => {
   return (
     <div>
       <img
-        id={file.id}
+        id={editor.current.id}
         className={cls}
-        key={file.id}
+        key={editor.current.id}
         src={file.content || ''}
-        onClick={() => { editor.select(file.id) }}
+        onClick={() => { editor.select(editor.current.id) }}
       />
     </div>
   )
@@ -30,11 +30,11 @@ const ToolBar = observer(() => {
   const { editor, containerStyle } = useEditor();
 
   const renderTab = () => {
-    if (editor.files.length < 2) {
+    if (editor.workspaces.length < 2) {
       return null
     }
-    return editor.files.map((file) => {
-      return <TabItem key={file.id} file={file} />;
+    return editor.workspaces.map((workspace) => {
+      return <TabItem key={workspace.id} file={workspace.file} />;
     });
   };
 
@@ -59,11 +59,11 @@ const ToolBar = observer(() => {
         </div>
         <div className='image-editor__files-controller__item'>
           <span className="label">P:&nbsp;</span>
-          <span className="value">{editor.current.naturalWidth}*{editor.current.naturalHeight}</span>
+          <span className="value">{editor.current.file.naturalWidth}*{editor.current.file.naturalHeight}</span>
         </div>
         <div className='image-editor__files-controller__item'>
           <span className="label">S:&nbsp;</span>
-          <span className="value">{editor.current.size}</span>
+          <span className="value">{editor.current.file.size}</span>
         </div>
       </div>
     )

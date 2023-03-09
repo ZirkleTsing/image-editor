@@ -1,6 +1,6 @@
 
 import { makeObservable, observable, action, computed } from 'mobx';
-import { isFile, isNull, generateUuid } from '../shared'
+import { isFile, isNull } from '../shared'
 import { getObjectURL, dataURLtoFile, calcImageSize, toImage, toSize } from '../internal'
 import type { Editor } from '.'
 
@@ -12,7 +12,6 @@ class ImageFile {
   data: string | null = null
   originFile: string = ''
   fileName: string = ''
-  id: string
   fetching: boolean = false
   editor: Editor
   // 像素
@@ -25,14 +24,12 @@ class ImageFile {
     const { file } = props
     this.originFile = isFile(file) ? getObjectURL(file) : file
     this.fileName = isFile(file) ? file.name : file.split("/")[file.split("/").length - 1]
-    this.id = generateUuid()
     
     makeObservable(this, {
       fileName: observable,
       data: observable,
       fetching: observable,
       editor: observable,
-      id: observable,
       naturalHeight: observable,
       naturalWidth: observable,
       size: observable,
