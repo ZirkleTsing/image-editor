@@ -1,13 +1,7 @@
-import { makeObservable, observable, action } from 'mobx';
+import { makeObservable, observable, action, computed } from 'mobx';
 import { ImageFile } from '.';
 
 type ImageFiles = File[] | string[];
-// type Size = {
-//   swidth?: number;
-//   sheight?: number;
-//   sx?: number;
-//   sy?: number;
-// };
 
 interface EditorProps {
   files: ImageFiles;
@@ -20,16 +14,21 @@ class Editor {
   container: HTMLDivElement | null = null
   width: number = 0
   height: number = 0
+  activeId: string
 
   constructor(props: EditorProps) {
     this.files = props.files.map((file) => new ImageFile({ file }, this));
     this.ref = props.ref
+    this.activeId = this.files[0]?.id
     makeObservable(this, {
       files: observable,
       container: observable,
       width: observable,
       height: observable,
-      effect: action
+      activeId: observable,
+      current: computed,
+      effect: action,
+      select: action
     });
   }
 
@@ -39,6 +38,14 @@ class Editor {
     const rect = this.container.getBoundingClientRect()
     this.width = rect.width - 40
     this.height = rect.height - 40
+  }
+
+  select(id: string) {
+    this.activeId = id
+  }
+
+  get current() {
+    return this.files.find(file => file.id === this.activeId) as ImageFile
   }
 
 }

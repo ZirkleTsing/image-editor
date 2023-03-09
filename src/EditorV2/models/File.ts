@@ -1,6 +1,6 @@
 
 import { makeObservable, observable, action, computed } from 'mobx';
-import { isFile, isNull } from '../shared'
+import { isFile, isNull, generateUuid } from '../shared'
 import { getObjectURL, dataURLtoFile, calcImageSize } from '../internal'
 import type { Editor } from '.'
 
@@ -12,28 +12,28 @@ class ImageFile {
   data: string | null = null
   originFile: string = ''
   fileName: string = ''
+  id: string
   fetching: boolean = false
   editor: Editor
   constructor(props: ImageFileProps, editor: Editor) {
     this.editor = editor
-    this.initialize(props)
+    const { file } = props
+    this.originFile = isFile(file) ? getObjectURL(file) : file
+    this.fileName = isFile(file) ? file.name : file.split("/")[file.split("/").length - 1]
+    this.id = generateUuid()
+    
     makeObservable(this, {
       fileName: observable,
       data: observable,
       fetching: observable,
       editor: observable,
+      id: observable,
       loaded: computed,
       name: computed,
       content: computed,
       read: action,
       // getImageFileAdaptToCanvas: action
     })
-  }
-
-  private initialize(props: ImageFileProps) {
-    const { file } = props
-    this.originFile = isFile(file) ? getObjectURL(file) : file
-    this.fileName = isFile(file) ? file.name : file.split("/")[file.split("/").length - 1]
   }
 
   get loaded() {

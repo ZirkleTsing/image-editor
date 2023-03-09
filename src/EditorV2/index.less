@@ -17,4 +17,31 @@
   &__img {
     user-select: none;
   }
+
+  &__files-tab {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: auto;
+    background-color: rgba(245, 245, 245, 0.2);
+    &__item {
+      width: 70px;
+      height: 70px;
+      margin-right: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      box-sizing: border-box;
+      border: 2px solid;
+      overflow-clip-margin: content-box;
+      overflow: clip;
+      user-select: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 }
