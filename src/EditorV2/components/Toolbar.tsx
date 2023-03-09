@@ -2,25 +2,27 @@ import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Spin } from 'antd'
 import { useEditor } from './ImageEditorContext';
-import type { ImageFile } from '../models'
+import type { WorkSpace } from '../models'
 
 interface TabItemProps {
-  file: ImageFile
+  workspace: WorkSpace
 }
 
 const TabItem: React.FC<TabItemProps> = observer((props) => {
   const { editor } = useEditor()
-  const { file } = props
+  const { workspace } = props
   const cls = 'image-editor__files-tab__item'
-  if (!file.loaded) return <div className={cls}><Spin size="small" /></div>
+  if (!workspace.file.loaded) return <div className={cls}><Spin size="small" /></div>
   return (
     <div>
       <img
-        id={editor.current.id}
+        id={workspace.id}
         className={cls}
-        key={editor.current.id}
-        src={file.content || ''}
-        onClick={() => { editor.select(editor.current.id) }}
+        key={workspace.id}
+        src={workspace.file.content || ''}
+        onClick={() => {
+          editor.select(workspace.id)
+        }}
       />
     </div>
   )
@@ -34,7 +36,7 @@ const ToolBar = observer(() => {
       return null
     }
     return editor.workspaces.map((workspace) => {
-      return <TabItem key={workspace.id} file={workspace.file} />;
+      return <TabItem key={workspace.id} workspace={workspace} />;
     });
   };
 

@@ -17,7 +17,7 @@ class Editor {
   activeId: string
   constructor(props: EditorProps) {
     this.workspaces = props.files.map((file) => new WorkSpace({ file }, this))
-    // this.files = props.files.map((file) => new ImageFile({ file }, this));
+    console.log('this:', this.workspaces)
     this.ref = props.ref
     this.activeId = this.workspaces.length > 0 ? this.workspaces[0].id : ''
     makeObservable(this, {
@@ -41,10 +41,12 @@ class Editor {
   }
 
   select(id: string) {
+    console.log('点击:', id)
     this.activeId = id
   }
 
   get current() {
+    console.log('变化')
     return this.workspaces.find(workSpace => workSpace.id === this.activeId) as WorkSpace
   }
 

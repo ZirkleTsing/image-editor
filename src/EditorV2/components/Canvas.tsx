@@ -12,9 +12,7 @@ const Image: React.FC<ImageProps> = observer((props) => {
   const { image } = props
 
   if (!image.loaded) {
-    return (
-      <div>loading</div>
-    )
+    return null
   }
 
   return (
