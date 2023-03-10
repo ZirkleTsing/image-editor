@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import cls from 'classnames'
 import { observer } from "mobx-react-lite"
 import { useEditor } from '../context'
 import { useCurrentWorkSpace } from '../hooks'
+import { nextTick } from '../internal'
 import { default as ClipBox } from './ClipBox'
 import type { ImageFile } from '../models'
 
@@ -26,7 +27,15 @@ const WorkSpace = observer(() => {
   const { containerStyle, className, editor } = useEditor()
   const workspace = useCurrentWorkSpace()
 
-  console.log('editor.', editor.current)
+  useEffect(() => {
+    const run = () => nextTick(() => workspace.check());
+    document.addEventListener('mouseup', run);
+    run();
+    return () => {
+      document.removeEventListener('mouseup', run)
+    }
+  }, [])
+
   return (
     <div className={cls('image-editor', className)} style={containerStyle}>
       <Image image={editor.current.file} />

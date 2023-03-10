@@ -2,7 +2,7 @@ import React, { useMemo, useEffect } from 'react'
 import { ImageEditorContext } from '../context'
 import { observer } from "mobx-react-lite"
 import { default as Toolbar } from './Toolbar'
-import { default as WorkSpace } from './Canvas'
+import { default as WorkSpace } from './WorkSpace'
 import { Editor } from '../models'
 import type { IClipBoxProps } from '../models/ClipBox'
 

@@ -101,14 +101,35 @@
     z-index: 99;
     user-select: none;
     box-sizing: border-box;
+    z-index: 1;
     cursor: move;
-    > div {
+    background-color: #f8f8f8;
+    &.overlap {
+      background-color: #d5cecb;
+    }
+    &.active {
+      z-index: 10;
+      .image-editor__clip-item {
+        display: unset;
+      }
+    }
+    &.resizing,&.moving {
+      background-color: #b3aba3;
+    }
+    &-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+    &-item {
       border: 1px solid;
       width: 4px;
       height: 4px;
       box-sizing: content-box;
       background-color: #fff;
       position: absolute;
+      display: none;
     }
     &__leftTop {
       top: -3px;

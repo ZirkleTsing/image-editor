@@ -10,6 +10,7 @@ export interface IClipBoxProps {
     width: number;
     height: number;
   };
+  index: number
 }
 
 type IClipBoxResizer = {
@@ -32,6 +33,8 @@ class ClipBox {
   id: string;
   workspace: WorkSpace;
   container: HTMLDivElement | null = null;
+  isOverlap: boolean = false;
+  index: number
   resizer: IClipBoxResizer = {
     leftTop: null,
     rightTop: null,
@@ -51,6 +54,7 @@ class ClipBox {
     this.editor = editor;
     this.id = generateUuid();
     this.workspace = workspace;
+    this.index = props.index
     this.initialize(props);
 
     makeObservable(this, {
@@ -62,13 +66,16 @@ class ClipBox {
       id: observable,
       container: observable,
       startPosition: observable,
+      isOverlap: observable,
       resizer: observable.struct,
       left: computed,
       top: computed,
       height: computed,
       width: computed,
-      // attach: action,
+      isClipOverlap: action,
       updatePosition: action,
+      attachContainer: action,
+      attachResizer: action
     });
   }
 
@@ -170,6 +177,11 @@ class ClipBox {
     }
   };
 
+  isClipOverlap = () => {
+    // 判断当前元素是否重叠
+    this.isOverlap = this.workspace.isElementOverlap(this)
+  }
+
   attachContainer() {
     this.container = document.querySelectorAll(
       `.clip-${this.id}`,
@@ -227,6 +239,7 @@ class ClipBox {
 
     const onContainerMouseDown = (event: MouseEvent) => {
       event.stopPropagation();
+      this.workspace.select(this.id)
       this.workspace.isDragging = true;
       this.workspace.draggingTarget = this;
       this.workspace.draggingType = 'ClipBox';
@@ -261,7 +274,7 @@ class ClipBox {
         if (
           this.workspace.isDragging &&
           this.workspace.draggingTarget === this &&
-          this.workspace.draggingType === type
+          this.workspace.draggingType === 'Resizer'
         ) {
           const offsetPosition = {
             x: moveEvent.clientX - this.startPosition.x,
@@ -283,10 +296,11 @@ class ClipBox {
       };
 
       const onMouseDown = (mouseEvent: MouseEvent) => {
+        this.workspace.select(this.id)
         mouseEvent.stopPropagation();
         this.workspace.isDragging = true;
         this.workspace.draggingTarget = this;
-        this.workspace.draggingType = type;
+        this.workspace.draggingType = 'Resizer';
         this.startPosition = {
           x: mouseEvent.clientX,
           y: mouseEvent.clientY,
@@ -322,7 +336,6 @@ class ClipBox {
       [],
     );
 
-    console.log('disposeList:', disposeList);
     return disposeList;
   }
 }
