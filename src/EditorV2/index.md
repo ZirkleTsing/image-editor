@@ -3,12 +3,19 @@
 ## 图片编辑器示例
 
 ```tsx
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import { ImageEditorV2 } from 'image-editor';
 
 export default () => {
+  const editorRef = useRef(null)
+
+  useEffect(() => {
+    console.log('editorRef', editorRef.current)
+  }, [])
+
   return (
     <ImageEditorV2
+      ref={editorRef}
       containerStyle={{ width: 600, height: 600 }}
       positions={[
         { left: 80, top: 80, width: 120, height: 120 },
