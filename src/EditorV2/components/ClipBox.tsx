@@ -19,7 +19,7 @@ export default observer<IClipBoxProps>((props) => {
       containerDispose()
       resizerDisposeList.forEach(dispose => dispose())
     }
-  }, [])
+  }, [clip])
 
   return (
     <div

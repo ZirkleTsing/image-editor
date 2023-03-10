@@ -53,7 +53,9 @@ class WorkSpace {
       attach: action,
       select: action,
       check: action,
-      onKeyPress: action
+      onKeyPress: action,
+      addClip: action,
+      deleteClip: action
     });
   }
 
@@ -87,6 +89,19 @@ class WorkSpace {
     this.clips.forEach((clip) => {
       clip.isClipOverlap();
     });
+  }
+
+  addClip() {
+    const newClipBox = new ClipBox({ position: { left: 20, top: 20, width: 100, height: 100 }, index: this.clips.length}, this.editor, this)
+    this.clips.push(newClipBox)
+    this.activeClipId = newClipBox.id
+  }
+
+  deleteClip() {
+    this.clips.splice(this.clips.indexOf(this.currentClip as ClipBox), 1)
+    if (this.clips.length) {
+      this.activeClipId = this.clips[0].id
+    }
   }
 
   onKeyPress = (e: KeyboardEvent) => {

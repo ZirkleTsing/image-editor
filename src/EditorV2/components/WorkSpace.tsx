@@ -36,7 +36,7 @@ const WorkSpace = observer(() => {
       dispose()
       document.removeEventListener('mouseup', run)
     }
-  }, [])
+  }, [workspace])
 
   return (
     <div className={cls('image-editor', className)} style={containerStyle}>
