@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import type { Editor } from  '../models'
+import type { Editor } from  './models'
 
 interface IEditorContext {
   editor: Editor

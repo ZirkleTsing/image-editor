@@ -1,9 +1,9 @@
 import React from 'react'
 import cls from 'classnames'
 import { observer } from "mobx-react-lite"
-import { useEditor } from '.'
+import { useEditor } from '../context'
 import { useCurrentWorkSpace } from '../hooks'
-import { default as Clipper } from './Clipper'
+import { default as ClipBox } from './ClipBox'
 import type { ImageFile } from '../models'
 
 type ImageProps = {
@@ -22,8 +22,7 @@ const Image: React.FC<ImageProps> = observer((props) => {
   )
 })
 
-{/* <Image image={editor.files[0]} /> */}
-const Canvas = observer(() => {
+const WorkSpace = observer(() => {
   const { containerStyle, className, editor } = useEditor()
   const workspace = useCurrentWorkSpace()
 
@@ -33,11 +32,11 @@ const Canvas = observer(() => {
       <Image image={editor.current.file} />
       {workspace.clips?.map(clip => {
         return (
-          <Clipper key={clip.id} clip={clip} />
+          <ClipBox key={clip.id} clip={clip} />
         )
       })}
     </div>
   )
 })
 
-export default Canvas
+export default WorkSpace

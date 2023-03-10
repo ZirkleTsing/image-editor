@@ -28,12 +28,12 @@ class Editor {
       height: observable,
       activeId: observable,
       current: computed,
-      effect: action,
+      attach: action,
       select: action
     });
   }
 
-  effect() {
+  attach() {
     const container = document.querySelectorAll(this.ref)?.[0] as HTMLDivElement
     this.container = container
     const rect = this.container.getBoundingClientRect()

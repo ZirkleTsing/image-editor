@@ -1,4 +1,4 @@
-import { useEditor } from '../components'
+import { useEditor } from '../context'
 
 const useCurrentWorkSpace = () => {
   const { editor } = useEditor()
