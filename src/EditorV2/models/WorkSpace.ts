@@ -95,22 +95,22 @@ class WorkSpace {
       switch (keyCode) {
         case KeyBoard.LEFT: {
           e.preventDefault()
-          this.currentClip.left = this.currentClip.left - 1
+          this.currentClip.left = this.currentClip.left - 3
           break;
         }
         case KeyBoard.UP: {
           e.preventDefault()
-          this.currentClip.top = this.currentClip.top - 1
+          this.currentClip.top = this.currentClip.top - 3
           break;
         }
         case KeyBoard.RIGHT: {
           e.preventDefault()
-          this.currentClip.left = this.currentClip.left + 1
+          this.currentClip.left = this.currentClip.left + 3
           break;
         }
         case KeyBoard.DOWN: {
           e.preventDefault()
-          this.currentClip.top = this.currentClip.top + 1
+          this.currentClip.top = this.currentClip.top + 3
           break;
         }
         default: {
