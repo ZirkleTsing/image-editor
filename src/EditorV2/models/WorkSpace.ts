@@ -1,9 +1,15 @@
-import { computed, makeObservable, observable, action } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { ClipBox, Editor, ImageFile } from '.';
 import { isElementsOverlap } from '../internal';
 import { generateUuid } from '../shared';
 import type { IClipBoxProps } from './ClipBox';
 
+const KeyBoard = {
+  LEFT: 'ArrowLeft',
+  UP: 'ArrowUp',
+  RIGHT: 'ArrowRight',
+  DOWN: 'ArrowDown',
+} as const;
 type ImageFiles = File | string;
 
 export interface WorkSpaceProps {
@@ -44,13 +50,15 @@ class WorkSpace {
       currentClip: computed,
       isResizing: computed,
       isElementOverlap: action,
+      attach: action,
       select: action,
-      check: action
+      check: action,
+      onKeyPress: action
     });
   }
 
   get isResizing() {
-    return this.draggingType === 'Resizer' && this.isDragging
+    return this.draggingType === 'Resizer' && this.isDragging;
   }
 
   get currentClip() {
@@ -62,19 +70,80 @@ class WorkSpace {
 
     return otherClip.reduce((isOverlap, clip) => {
       return (
-        isOverlap || isElementsOverlap(target.container as HTMLElement, clip.container as HTMLDivElement)
+        isOverlap ||
+        isElementsOverlap(
+          target.container as HTMLElement,
+          clip.container as HTMLDivElement,
+        )
       );
     }, false);
   }
 
   select(id: string) {
-    this.activeClipId = id
+    this.activeClipId = id;
   }
 
   check() {
     this.clips.forEach((clip) => {
-      clip.isClipOverlap()
-    })
+      clip.isClipOverlap();
+    });
+  }
+
+  onKeyPress = (e: KeyboardEvent) => {
+    const keyCode = e.code;
+    if (this.activeClipId && this.currentClip) {
+      switch (keyCode) {
+        case KeyBoard.LEFT: {
+          e.preventDefault()
+          this.currentClip.left = this.currentClip.left - 1
+          break;
+        }
+        case KeyBoard.UP: {
+          e.preventDefault()
+          this.currentClip.top = this.currentClip.top - 1
+          break;
+        }
+        case KeyBoard.RIGHT: {
+          e.preventDefault()
+          this.currentClip.left = this.currentClip.left + 1
+          break;
+        }
+        case KeyBoard.DOWN: {
+          e.preventDefault()
+          this.currentClip.top = this.currentClip.top + 1
+          break;
+        }
+        default: {
+          return;
+        }
+      }
+    }
+  }
+
+  onKeyUp = (e: KeyboardEvent) => {
+    const keyCode = e.code
+    if (this.activeClipId && this.currentClip) {
+      switch(keyCode) {
+        case KeyBoard.LEFT: 
+        case KeyBoard.UP: 
+        case KeyBoard.RIGHT: 
+        case KeyBoard.DOWN: {
+          this.check()
+        }
+        default: {
+          break;
+        }
+      }
+    }
+  }
+
+  attach() {
+    document.addEventListener('keydown', this.onKeyPress);
+    document.addEventListener('keyup', this.onKeyUp)
+    return () => {
+      return document.removeEventListener('keydown', this.onKeyPress);
+      return document.removeEventListener('keyup', this.onKeyUp);
+    };
   }
 }
 

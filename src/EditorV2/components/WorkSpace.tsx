@@ -30,8 +30,10 @@ const WorkSpace = observer(() => {
   useEffect(() => {
     const run = () => nextTick(() => workspace.check());
     document.addEventListener('mouseup', run);
+    const dispose = workspace.attach();
     run();
     return () => {
+      dispose()
       document.removeEventListener('mouseup', run)
     }
   }, [])

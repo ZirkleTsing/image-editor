@@ -131,18 +131,18 @@ class ClipBox {
         this.left = this.left + offsetPosition.x;
         this.width = this.width - offsetPosition.x;
         this.height = this.height - offsetPosition.y;
-        return;
+        break;
       }
       case 'rightTop': {
         this.top = this.top + offsetPosition.y;
         this.height = this.height - offsetPosition.y;
         this.width = this.width + offsetPosition.x;
-        return;
+        break;
       }
       case 'rightBottom': {
         this.width = this.width + offsetPosition.x;
         this.height = this.height + offsetPosition.y;
-        return;
+        break;
       }
       case 'topCenter': {
         this.top = this.top + offsetPosition.y;
@@ -151,28 +151,28 @@ class ClipBox {
       }
       case 'bottomCenter': {
         this.height = this.height + offsetPosition.y;
-        return;
+        break;
       }
       case 'rightCenter': {
         this.width = this.width + offsetPosition.x;
-        return;
+        break;
       }
       case 'leftCenter': {
         this.left = this.left + offsetPosition.x;
         this.width = this.width - offsetPosition.x;
-        return;
+        break;
       }
       case 'leftBottom': {
         this.left = this.left + offsetPosition.x;
         this.width = this.width - offsetPosition.x;
         this.height = this.height + offsetPosition.y;
-        return;
+        break;
       }
       default: {
         // 拖拽ClipBox
         this.left = Math.max(this.left + offsetPosition.x, 0);
         this.top = Math.max(this.top + offsetPosition.y, 0);
-        return;
+        break;
       }
     }
   };

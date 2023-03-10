@@ -7563,6 +7563,7 @@ __metadata:
     father: ^4.1.0
     husky: ^8.0.1
     lint-staged: ^13.0.3
+    lodash: ^4.17.21
     mobx: ^6.7.0
     mobx-react-lite: ^3.4.0
     prettier: ^2.7.1
