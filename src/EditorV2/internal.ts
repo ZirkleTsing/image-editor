@@ -1,3 +1,5 @@
+import { observable } from 'mobx'
+
 const threshold = 10;
 
 export const getObjectURL = (file: File) => {
@@ -97,3 +99,22 @@ export const isElementsOverlap = (el1: HTMLElement, el2: HTMLElement): boolean =
 };
 
 export const nextTick = (callback?: () => void) => Promise.resolve(0).then(callback)
+
+
+export const SelectEventList = observable<SeletEvent>([])
+
+type SeletEvent = (payload: any) => void
+
+export const registerSelectEvent = (event: SeletEvent) => {
+  SelectEventList.push(event)
+}
+
+export const unregisterSelectEvent = (event: SeletEvent) => {
+  SelectEventList.splice(SelectEventList.indexOf(event), 1)
+}
+
+export const dispatchSelectEvent = (payload: any) => {
+  SelectEventList.forEach(handler => {
+    handler(payload)
+  })
+}

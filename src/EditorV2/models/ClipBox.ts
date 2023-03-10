@@ -240,6 +240,7 @@ class ClipBox {
     const onContainerMouseDown = (event: MouseEvent) => {
       event.stopPropagation();
       this.workspace.select(this.id)
+      this.workspace.mode = 'normal'
       this.workspace.isDragging = true;
       this.workspace.draggingTarget = this;
       this.workspace.draggingType = 'ClipBox';
@@ -297,6 +298,7 @@ class ClipBox {
 
       const onMouseDown = (mouseEvent: MouseEvent) => {
         this.workspace.select(this.id)
+        this.workspace.mode = 'normal'
         mouseEvent.stopPropagation();
         this.workspace.isDragging = true;
         this.workspace.draggingTarget = this;
