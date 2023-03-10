@@ -29,8 +29,14 @@ class Editor {
       activeId: observable,
       current: computed,
       attach: action,
-      select: action
+      select: action,
+      addWorkSpace: action,
+      deleteWorkSpace: action
     });
+  }
+  
+  get current() {
+    return this.workspaces.find(workSpace => workSpace.id === this.activeId) as WorkSpace
   }
 
   attach() {
@@ -45,10 +51,18 @@ class Editor {
     this.activeId = id
   }
 
-  get current() {
-    return this.workspaces.find(workSpace => workSpace.id === this.activeId) as WorkSpace
+  deleteWorkSpace() {
+    this.workspaces.splice(this.workspaces.indexOf(this.current), 1)
+    if (this.workspaces.length) {
+      this.activeId = this.workspaces[0].id
+    }
   }
 
+  addWorkSpace(props: WorkSpaceProps) {
+    const newWorkSpace = new WorkSpace(props, this)
+    this.workspaces.push(newWorkSpace)
+    this.activeId = newWorkSpace.id
+  }
 }
 
 export default Editor;
