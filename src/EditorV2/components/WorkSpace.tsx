@@ -1,53 +1,64 @@
-import React, { useEffect } from 'react'
-import cls from 'classnames'
-import { observer } from "mobx-react-lite"
-import { useEditor } from '../context'
-import { useCurrentWorkSpace } from '../hooks'
-import { nextTick } from '../internal'
-import { default as ClipBox } from './ClipBox'
-import type { ImageFile } from '../models'
+import cls from 'classnames';
+import { observer } from 'mobx-react-lite';
+import React, { useEffect } from 'react';
+import { useEditor } from '../context';
+import { useCurrentWorkSpace, useSelectEvent } from '../hooks';
+import { nextTick } from '../internal';
+import type { ImageFile } from '../models';
+import { default as ClipBox } from './ClipBox';
 
 type ImageProps = {
-  image: ImageFile
-}
+  image: ImageFile;
+};
 
 const Image: React.FC<ImageProps> = observer((props) => {
-  const { image } = props
+  const { image } = props;
 
   if (!image.loaded) {
-    return null
+    return null;
   }
 
   return (
-    <img className='image-editor__img' onDragStart={(e) => e.preventDefault()} src={image.content || ''} />
-  )
-})
+    <img
+      className="image-editor__img"
+      onDragStart={(e) => e.preventDefault()}
+      src={image.content || ''}
+    />
+  );
+});
 
 const WorkSpace = observer(() => {
-  const { containerStyle, className, editor } = useEditor()
-  const workspace = useCurrentWorkSpace()
-
+  const { containerStyle, className, editor } = useEditor();
+  const workspace = useCurrentWorkSpace();
+  const selectEvent = useSelectEvent();
   useEffect(() => {
     const run = () => nextTick(() => workspace.check());
     document.addEventListener('mouseup', run);
     const dispose = workspace.attach();
     run();
     return () => {
-      dispose()
-      document.removeEventListener('mouseup', run)
-    }
-  }, [workspace])
+      dispose();
+      document.removeEventListener('mouseup', run);
+    };
+  }, [workspace]);
 
   return (
     <div className={cls('image-editor', className)} style={containerStyle}>
+      <div
+        className={cls('image-editor__mask', { show: selectEvent.show })}
+        style={{
+          width: selectEvent.width,
+          height: selectEvent.height,
+          left: selectEvent.left,
+          top: selectEvent.top,
+        }}
+      />
       <Image image={editor.current.file} />
-      {workspace.clips?.map(clip => {
-        return (
-          <ClipBox key={clip.id} clip={clip} />
-        )
+      {workspace.clips?.map((clip) => {
+        return <ClipBox key={clip.id} clip={clip} />;
       })}
     </div>
-  )
-})
+  );
+});
 
-export default WorkSpace
+export default WorkSpace;

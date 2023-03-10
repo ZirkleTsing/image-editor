@@ -1,7 +1,8 @@
-import { MinusSquareOutlined, PlusSquareOutlined } from '@ant-design/icons';
-import { Spin } from 'antd';
-import { observer } from 'mobx-react-lite';
 import React, { Fragment } from 'react';
+import { MinusSquareOutlined, PlusSquareOutlined, ExpandOutlined } from '@ant-design/icons';
+import { Spin } from 'antd';
+import cls from 'classnames';
+import { observer } from 'mobx-react-lite';
 import { useEditor } from '../context';
 import { useCurrentClip, useCurrentWorkSpace } from '../hooks';
 import type { WorkSpace } from '../models';
@@ -109,23 +110,30 @@ const ToolBar = observer(() => {
           <span className="label">S:&nbsp;</span>
           <span className="value">{currentWorkSpace.file.size}</span>
         </div>
-
-        <div className="image-editor__files-controller__item">
-          <span className="label">热区:&nbsp;</span>
-          <PlusSquareOutlined
-            className="plus"
-            onClick={() => {
-              currentWorkSpace.addClip();
-            }}
-          />
-          {currentWorkSpace.activeClipId && (
-            <MinusSquareOutlined
-              className="minus"
+        <div>
+          <div className="image-editor__files-controller__item">
+            <span className="label">热区:&nbsp;</span>
+            <PlusSquareOutlined
+              className="plus"
               onClick={() => {
-                currentWorkSpace.deleteClip();
+                currentWorkSpace.addClip();
               }}
             />
-          )}
+            {currentWorkSpace.activeClipId && (
+              <MinusSquareOutlined
+                className="minus"
+                onClick={() => {
+                  currentWorkSpace.deleteClip();
+                }}
+              />
+            )}
+          </div>
+          <div className="image-editor__files-controller__item">
+            <span className="label">框选:&nbsp;</span>  
+            <ExpandOutlined className={cls("select", { active: currentWorkSpace.mode === 'select' })} onClick={() => {
+              currentWorkSpace.mode = currentWorkSpace.mode === 'select' ?  'normal' : 'select'
+            }} />
+          </div>
         </div>
       </div>
     );

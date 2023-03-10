@@ -1,5 +1,5 @@
 import { action, computed, makeObservable, observable } from 'mobx';
-import { ClipBox, Editor, ImageFile } from '.';
+import { ClipBox, Editor, ImageFile, SelectEvent } from '.';
 import { isElementsOverlap } from '../internal';
 import { generateUuid } from '../shared';
 import type { IClipBoxProps } from './ClipBox';
@@ -26,6 +26,9 @@ class WorkSpace {
   isDragging: boolean = false;
   draggingTarget: any = null;
   draggingType: 'ClipBox' | 'Resizer' | (string & {}) = '';
+  // select 框选模式 normal 常规模式
+  mode: 'select' | 'normal' | (string & {}) = 'normal'
+  selectEvent: SelectEvent;
 
   constructor(props: WorkSpaceProps, editor: Editor) {
     this.file = new ImageFile({ file: props.file }, editor);
@@ -34,6 +37,7 @@ class WorkSpace {
         (position, index) => new ClipBox({ position, index }, editor, this),
       ) || [];
     this.editor = editor;
+    this.selectEvent = new SelectEvent({}, this, this.editor);
     this.id = generateUuid();
     if (this.clips.length > 0) {
       this.activeClipId = this.clips[0].id;
@@ -47,6 +51,7 @@ class WorkSpace {
       isDragging: observable,
       draggingType: observable,
       draggingTarget: observable,
+      mode: observable,
       currentClip: computed,
       isResizing: computed,
       isElementOverlap: action,
@@ -55,7 +60,7 @@ class WorkSpace {
       check: action,
       onKeyPress: action,
       addClip: action,
-      deleteClip: action
+      deleteClip: action,
     });
   }
 
@@ -92,15 +97,22 @@ class WorkSpace {
   }
 
   addClip() {
-    const newClipBox = new ClipBox({ position: { left: 20, top: 20, width: 100, height: 100 }, index: this.clips.length}, this.editor, this)
-    this.clips.push(newClipBox)
-    this.activeClipId = newClipBox.id
+    const newClipBox = new ClipBox(
+      {
+        position: { left: 20, top: 20, width: 100, height: 100 },
+        index: this.clips.length,
+      },
+      this.editor,
+      this,
+    );
+    this.clips.push(newClipBox);
+    this.activeClipId = newClipBox.id;
   }
 
   deleteClip() {
-    this.clips.splice(this.clips.indexOf(this.currentClip as ClipBox), 1)
+    this.clips.splice(this.clips.indexOf(this.currentClip as ClipBox), 1);
     if (this.clips.length) {
-      this.activeClipId = this.clips[0].id
+      this.activeClipId = this.clips[0].id;
     }
   }
 
@@ -109,32 +121,32 @@ class WorkSpace {
     if (this.activeClipId && this.currentClip) {
       switch (keyCode) {
         case KeyBoard.LEFT: {
-          e.preventDefault()
-          this.currentClip.left = this.currentClip.left - 3
+          e.preventDefault();
+          this.currentClip.left = this.currentClip.left - 3;
           // this.isDragging = true
           // this.draggingTarget = this.currentClip
           // this.draggingType = 'ClipBox'
           break;
         }
         case KeyBoard.UP: {
-          e.preventDefault()
-          this.currentClip.top = this.currentClip.top - 3
+          e.preventDefault();
+          this.currentClip.top = this.currentClip.top - 3;
           // this.isDragging = true
           // this.draggingTarget = this.currentClip
           // this.draggingType = 'ClipBox'
           break;
         }
         case KeyBoard.RIGHT: {
-          e.preventDefault()
-          this.currentClip.left = this.currentClip.left + 3
+          e.preventDefault();
+          this.currentClip.left = this.currentClip.left + 3;
           // this.isDragging = true
           // this.draggingTarget = this.currentClip
           // this.draggingType = 'ClipBox'
           break;
         }
         case KeyBoard.DOWN: {
-          e.preventDefault()
-          this.currentClip.top = this.currentClip.top + 3
+          e.preventDefault();
+          this.currentClip.top = this.currentClip.top + 3;
           // this.isDragging = true
           // this.draggingTarget = this.currentClip
           // this.draggingType = 'ClipBox'
@@ -145,17 +157,17 @@ class WorkSpace {
         }
       }
     }
-  }
+  };
 
   onKeyUp = (e: KeyboardEvent) => {
-    const keyCode = e.code
+    const keyCode = e.code;
     if (this.activeClipId && this.currentClip) {
-      switch(keyCode) {
-        case KeyBoard.LEFT: 
-        case KeyBoard.UP: 
-        case KeyBoard.RIGHT: 
+      switch (keyCode) {
+        case KeyBoard.LEFT:
+        case KeyBoard.UP:
+        case KeyBoard.RIGHT:
         case KeyBoard.DOWN: {
-          this.check()
+          this.check();
           // this.isDragging = false
           // this.draggingTarget = null
           // this.draggingType = ''
@@ -165,11 +177,11 @@ class WorkSpace {
         }
       }
     }
-  }
+  };
 
   attach() {
     document.addEventListener('keydown', this.onKeyPress);
-    document.addEventListener('keyup', this.onKeyUp)
+    document.addEventListener('keyup', this.onKeyUp);
     return () => {
       document.removeEventListener('keydown', this.onKeyPress);
       document.removeEventListener('keyup', this.onKeyUp);

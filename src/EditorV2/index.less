@@ -14,6 +14,20 @@
     linear-gradient(45deg, #f6fafc 25%, transparent 0),
     linear-gradient(45deg, transparent 75%, #f6fafc 0);
 
+  &__mask {
+    position: absolute;
+    background: #409eff;
+    opacity: 0.4;
+    // display: none;
+    // top: 10;
+    // left: 10;
+    // width: 120px;
+    // height: 120px;
+    &.show {
+      // display: block;
+    }
+  }
+
   &__img {
     user-select: none;
   }
@@ -84,7 +98,13 @@
       .minus {
         cursor: pointer;
       }
-
+      .select {
+        color: #888;
+        &.active {
+          color: #000000
+        }
+      }
+    
       & > input {
         width: 50px;
         height: 18px;
