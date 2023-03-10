@@ -96,21 +96,33 @@ class WorkSpace {
         case KeyBoard.LEFT: {
           e.preventDefault()
           this.currentClip.left = this.currentClip.left - 3
+          // this.isDragging = true
+          // this.draggingTarget = this.currentClip
+          // this.draggingType = 'ClipBox'
           break;
         }
         case KeyBoard.UP: {
           e.preventDefault()
           this.currentClip.top = this.currentClip.top - 3
+          // this.isDragging = true
+          // this.draggingTarget = this.currentClip
+          // this.draggingType = 'ClipBox'
           break;
         }
         case KeyBoard.RIGHT: {
           e.preventDefault()
           this.currentClip.left = this.currentClip.left + 3
+          // this.isDragging = true
+          // this.draggingTarget = this.currentClip
+          // this.draggingType = 'ClipBox'
           break;
         }
         case KeyBoard.DOWN: {
           e.preventDefault()
           this.currentClip.top = this.currentClip.top + 3
+          // this.isDragging = true
+          // this.draggingTarget = this.currentClip
+          // this.draggingType = 'ClipBox'
           break;
         }
         default: {
@@ -129,6 +141,9 @@ class WorkSpace {
         case KeyBoard.RIGHT: 
         case KeyBoard.DOWN: {
           this.check()
+          // this.isDragging = false
+          // this.draggingTarget = null
+          // this.draggingType = ''
         }
         default: {
           break;
