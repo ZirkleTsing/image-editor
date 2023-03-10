@@ -141,8 +141,8 @@ class WorkSpace {
     document.addEventListener('keydown', this.onKeyPress);
     document.addEventListener('keyup', this.onKeyUp)
     return () => {
-      return document.removeEventListener('keydown', this.onKeyPress);
-      return document.removeEventListener('keyup', this.onKeyUp);
+      document.removeEventListener('keydown', this.onKeyPress);
+      document.removeEventListener('keyup', this.onKeyUp);
     };
   }
 }
