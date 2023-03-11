@@ -1,25 +1,35 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useCurrentWorkSpace } from '.'
 import { SelectEvent, SelectEventHandler } from '../models'
+import { useEditor } from '../context'
 
 interface SelectEventProps {
   (callback?: SelectEventHandler, deps?: any[]): SelectEvent
 }
 
 const useSelectEvent: SelectEventProps = (callback, deps = []) => {
+  const { editor } = useEditor()
   const workspace = useCurrentWorkSpace()
+  const selectEvent = useMemo(() => new SelectEvent({}, editor), [editor])
+
+  useEffect(() => {
+    // 点击工具栏框选时，要注册框选事件
+    if (workspace.mode === 'select') {
+      return selectEvent.attach()
+    }
+  }, [workspace, editor.container, workspace.mode])
 
   useEffect(() => {
     if (callback && typeof callback === 'function') {
-      workspace.selectEvent.registerEvent(callback)
+      selectEvent.registerEvent(callback)
 
       return () => {
-        workspace.selectEvent.unregisterEvent(callback)
+        selectEvent.unregisterEvent(callback)
       }
     }
   }, [workspace, workspace.id, ...deps])
 
-  return workspace.selectEvent
+  return selectEvent
 }
 
 export default useSelectEvent

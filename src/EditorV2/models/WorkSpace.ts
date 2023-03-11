@@ -1,5 +1,5 @@
 import { action, computed, makeObservable, observable } from 'mobx';
-import { ClipBox, Editor, ImageFile, SelectEvent, SelectEventPayload } from '.';
+import { ClipBox, Editor, ImageFile, SelectEventPayload } from '.';
 import { isElementsOverlap, isElementsInArea } from '../internal';
 import { generateUuid } from '../shared';
 import type { IClipBoxProps } from './ClipBox';
@@ -28,7 +28,6 @@ class WorkSpace {
   draggingType: 'ClipBox' | 'Resizer' | (string & {}) = '';
   // select 框选模式 normal 常规模式
   mode: 'select' | 'normal' | (string & {}) = 'normal'
-  selectEvent: SelectEvent;
 
   constructor(props: WorkSpaceProps, editor: Editor) {
     this.file = new ImageFile({ file: props.file }, editor);
@@ -37,7 +36,6 @@ class WorkSpace {
         (position, index) => new ClipBox({ position, index }, editor, this),
       ) || [];
     this.editor = editor;
-    this.selectEvent = new SelectEvent({}, this, this.editor);
     this.id = generateUuid();
     if (this.clips.length > 0) {
       this.activeClipId = [this.clips[0].id];
@@ -58,6 +56,8 @@ class WorkSpace {
       selectClipBoxInArea: action,
       attach: action,
       select: action,
+      // 批量选择
+      batchSelect: action,
       checkOverlap: action,
       onKeyPress: action,
       addClip: action,
@@ -104,6 +104,11 @@ class WorkSpace {
     } else {
       this.activeClipId = [id];
     }
+  }
+
+  batchSelect = (payload: SelectEventPayload) => {
+    const selected = this.selectClipBoxInArea(payload)
+    this.activeClipId = selected.map(clip => clip.id)
   }
 
   // 检查元素是否重叠

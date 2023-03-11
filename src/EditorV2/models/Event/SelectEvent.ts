@@ -1,5 +1,5 @@
 import { action, computed, makeObservable, observable } from 'mobx';
-import { Editor, WorkSpace } from '..';
+import { Editor } from '..';
 import Subscriable from './Subscriable';
 
 type SelectEventProps = {};
@@ -23,12 +23,10 @@ class SelectEvent extends Subscriable<SelectEventHandler> {
   endY: number = 0;
   screenLeft: number = 0;
   screenTop: number = 0;
-  workspace: WorkSpace;
   editor: Editor;
 
-  constructor(props: SelectEventProps, workspace: WorkSpace, editor: Editor) {
+  constructor(props: SelectEventProps, editor: Editor) {
     super();
-    this.workspace = workspace;
     this.editor = editor;
     makeObservable(this, {
       show: observable,
@@ -36,7 +34,6 @@ class SelectEvent extends Subscriable<SelectEventHandler> {
       startY: observable,
       endX: observable,
       endY: observable,
-      workspace: observable,
       editor: observable,
       screenLeft: observable,
       screenTop: observable,
