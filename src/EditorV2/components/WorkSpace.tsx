@@ -31,13 +31,15 @@ const WorkSpace = observer(() => {
   const { containerStyle, className, editor } = useEditor();
   const workspace = useCurrentWorkSpace();
   
+  // 注册当前工作区框选事件的消费方
   const selectEvent = useSelectEvent((payload) => {
-    console.log('payload:', payload)
-  });
+  const selected = workspace.selectClipBoxInArea(payload)
+  workspace.activeClipId = selected.map(clip => clip.id)
+  }, []);
   
   useEffect(() => {
     // 检查拖拽对象是否有重叠
-    const run = () => nextTick(() => workspace.check());
+    const run = () => nextTick(() => workspace.checkOverlap());
     document.addEventListener('mouseup', run);
     const dispose = workspace.attach();
     run();

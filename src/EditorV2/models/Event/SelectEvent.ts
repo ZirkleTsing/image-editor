@@ -3,7 +3,7 @@ import { Editor, WorkSpace } from '..';
 import Subscriable from './Subscriable';
 
 type SelectEventProps = {};
-type SelectEventPayload = {
+export type SelectEventPayload = {
   left: number;
   top: number;
   width: number;
@@ -75,10 +75,12 @@ class SelectEvent extends Subscriable<SelectEventHandler> {
     document.addEventListener('mousemove', this.handleMouseMove);
     document.addEventListener('mouseup', this.handleMouseUp);
   };
+  
   handleMouseMove = (event: MouseEvent) => {
     this.endX = event.clientX;
     this.endY = event.clientY;
   };
+  
   handleMouseUp = () => {
     this.dispatch({
       left: this.left,
@@ -86,10 +88,10 @@ class SelectEvent extends Subscriable<SelectEventHandler> {
       width: this.width,
       height: this.height,
     });
-    document.removeEventListener('mousemove', this.handleMouseMove);
-    document.removeEventListener('mouseup', this.handleMouseUp);
     this.show = false;
     this.reset();
+    document.removeEventListener('mousemove', this.handleMouseMove);
+    document.removeEventListener('mouseup', this.handleMouseUp);
   };
 
   reset() {

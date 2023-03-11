@@ -55,15 +55,16 @@ const ToolBar = observer(() => {
         className="image-editor__files-controller"
         style={{ width: containerStyle?.width }}
       >
-        {currentClip && (
+        {currentClip.length === 1 && (
+          // 非批量选择
           <Fragment>
             <div className="image-editor__files-controller__item">
               <span className="label">X:&nbsp;</span>
               <input
                 type="number"
-                value={currentClip.left}
+                value={currentClip[0].left}
                 onChange={(e) => {
-                  currentClip.left = Number(e.target.value);
+                  currentClip[0].left = Number(e.target.value);
                 }}
               />
             </div>
@@ -71,9 +72,9 @@ const ToolBar = observer(() => {
               <span className="label">Y:&nbsp;</span>
               <input
                 type="number"
-                value={currentClip.top}
+                value={currentClip[0].top}
                 onChange={(e) => {
-                  currentClip.top = Number(e.target.value);
+                  currentClip[0].top = Number(e.target.value);
                 }}
               />
             </div>
@@ -81,9 +82,9 @@ const ToolBar = observer(() => {
               <span className="label">W:&nbsp;</span>
               <input
                 type="number"
-                value={currentClip.width}
+                value={currentClip[0].width}
                 onChange={(e) => {
-                  currentClip.width = Number(e.target.value);
+                  currentClip[0].width = Number(e.target.value);
                 }}
               />
             </div>
@@ -91,9 +92,9 @@ const ToolBar = observer(() => {
               <span className="label">H:&nbsp;</span>
               <input
                 type="number"
-                value={currentClip.height}
+                value={currentClip[0].height}
                 onChange={(e) => {
-                  currentClip.height = Number(e.target.value);
+                  currentClip[0].height = Number(e.target.value);
                 }}
               />
             </div>
@@ -119,7 +120,7 @@ const ToolBar = observer(() => {
                 currentWorkSpace.addClip();
               }}
             />
-            {currentWorkSpace.activeClipId && (
+            {currentWorkSpace.activeClipId.length && (
               <MinusSquareOutlined
                 className="minus"
                 onClick={() => {

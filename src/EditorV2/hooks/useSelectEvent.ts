@@ -17,7 +17,7 @@ const useSelectEvent: SelectEventProps = (callback, deps = []) => {
         workspace.selectEvent.unregisterEvent(callback)
       }
     }
-  }, [workspace, ...deps])
+  }, [workspace, workspace.id, ...deps])
 
   return workspace.selectEvent
 }

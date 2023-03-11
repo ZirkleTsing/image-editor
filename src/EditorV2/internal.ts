@@ -84,7 +84,10 @@ export const toSize = (bytes: File['size']): string => {
   return _bytes + ' ' + symbols[i];
 };
 
-export const isElementsOverlap = (el1: HTMLElement, el2: HTMLElement): boolean => {
+export const isElementsOverlap = (
+  el1: HTMLElement,
+  el2: HTMLElement,
+): boolean => {
   const domRect1 = el1.getBoundingClientRect();
   const domRect2 = el2.getBoundingClientRect();
 
@@ -96,4 +99,45 @@ export const isElementsOverlap = (el1: HTMLElement, el2: HTMLElement): boolean =
   );
 };
 
-export const nextTick = (callback?: () => void) => Promise.resolve(0).then(callback)
+type Selection = {
+  left: number;
+  top: number;
+  height: number;
+  width: number;
+};
+export const isElementsInArea = (
+  element: HTMLElement,
+  container: HTMLElement,
+  selection: Selection,
+): boolean => {
+  const containerRec = container.getBoundingClientRect()
+  const elementRec = element.getBoundingClientRect()
+
+  const elementPosition = {
+    left: elementRec.left - containerRec.left,
+    top: elementRec.top - containerRec.top,
+    right: elementRec.right - containerRec.left,
+    bottom: elementRec.bottom - containerRec.top
+  }
+
+  const selectionPosition = {
+    left: selection.left,
+    top: selection.top,
+    right: selection.left + selection.width,
+    bottom: selection.top + selection.height
+  }
+
+  return (
+    // 左上角
+    ((elementPosition.left > selectionPosition.right) && (elementPosition.left > selectionPosition.left)) && ((elementPosition.top < selectionPosition.bottom) && (elementPosition.top > selectionPosition.top)) ||
+    // 右上角
+    ((elementPosition.right > selectionPosition.left) && (elementPosition.right < selectionPosition.right)) && ((elementPosition.top < selectionPosition.bottom) && (elementPosition.top > selectionPosition.top)) ||
+    // 左下角
+    ((elementPosition.left > selectionPosition.right) && (elementPosition.left > selectionPosition.left)) && ((elementPosition.bottom > selectionPosition.top) && (elementPosition.bottom < selectionPosition.bottom)) ||
+    // 右下角
+    ((elementPosition.right > selectionPosition.left) && (elementPosition.right < selectionPosition.right) && ((elementPosition.bottom > selectionPosition.top) && (elementPosition.bottom < selectionPosition.bottom)))
+  )
+};
+
+export const nextTick = (callback?: () => void) =>
+  Promise.resolve(0).then(callback);
