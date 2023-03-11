@@ -1,18 +1,25 @@
 import { useEffect } from 'react'
-import { useEditor } from '../context'
 import { useCurrentWorkSpace } from '.'
+import { SelectEvent, SelectEventHandler } from '../models'
 
-const useSelectEvent = () => {
-  const { editor } = useEditor()
-  const worksapce = useCurrentWorkSpace()
+interface SelectEventProps {
+  (callback?: SelectEventHandler, deps?: any[]): SelectEvent
+}
+
+const useSelectEvent: SelectEventProps = (callback, deps = []) => {
+  const workspace = useCurrentWorkSpace()
 
   useEffect(() => {
-    if (worksapce.mode === 'select') {
-      return worksapce.selectEvent.attach()
-    }
-  }, [worksapce, editor.container, worksapce.mode])
+    if (callback && typeof callback === 'function') {
+      workspace.selectEvent.registerEvent(callback)
 
-  return worksapce.selectEvent
+      return () => {
+        workspace.selectEvent.unregisterEvent(callback)
+      }
+    }
+  }, [workspace, ...deps])
+
+  return workspace.selectEvent
 }
 
 export default useSelectEvent

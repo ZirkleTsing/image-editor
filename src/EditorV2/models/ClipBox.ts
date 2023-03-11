@@ -1,7 +1,7 @@
 import { action, computed, makeObservable, observable } from 'mobx';
-import type { Editor, WorkSpace } from '.';
 import { generateUuid } from '../shared';
 import type { Position } from '../types';
+import type { Editor, WorkSpace } from '.';
 
 export interface IClipBoxProps {
   position?: {
