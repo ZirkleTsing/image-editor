@@ -1,5 +1,5 @@
-import { useEffect, useCallback } from 'react'
-import { useCurrentWorkSpace } from '.'
+import { useCallback } from 'react'
+import { useCurrentWorkSpace, useKeyDown, useKeyUp } from '.'
 
 interface keyEventHook {
   (callback?: () => any, deps?: any[]): any
@@ -71,14 +71,9 @@ const useKeyEvent: keyEventHook = () => {
     }
   }, [workspace])
 
-  useEffect(() => {
-    document.addEventListener('keydown', onKeyPress);
-    document.addEventListener('keyup', onKeyUp);
-    return () => {
-      document.removeEventListener('keydown', onKeyPress);
-      document.removeEventListener('keyup', onKeyUp);
-    };
-  }, [workspace])
+  // 注册keyDown keyUp事件
+  useKeyDown(onKeyPress)
+  useKeyUp(onKeyUp)
 }
 
 export default useKeyEvent
