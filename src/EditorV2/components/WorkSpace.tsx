@@ -2,7 +2,7 @@ import cls from 'classnames';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import { useEditor } from '../context';
-import { useCurrentWorkSpace } from '../hooks';
+import { useCurrentWorkSpace, useKeyEvent } from '../hooks';
 import { nextTick } from '../internal';
 import ClipBox from './ClipBox';
 import SelectMask from './SelectMask';
@@ -31,16 +31,14 @@ const Image: React.FC<ImageProps> = observer((props) => {
 const WorkSpace = observer(() => {
   const { containerStyle, className, editor } = useEditor();
   const workspace = useCurrentWorkSpace();
+  useKeyEvent()
   
   useEffect(() => {
     // 检查拖拽对象是否有重叠
     const run = () => nextTick(() => workspace.checkOverlap());
     document.addEventListener('mouseup', run);
-    // 工作区初始化: 按键事件
-    const dispose = workspace.attach();
     run();
     return () => {
-      dispose();
       document.removeEventListener('mouseup', run);
     };
   }, [workspace]);

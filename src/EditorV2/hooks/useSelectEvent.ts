@@ -3,11 +3,11 @@ import { useCurrentWorkSpace } from '.'
 import { SelectEvent, SelectEventHandler } from '../models'
 import { useEditor } from '../context'
 
-interface SelectEventProps {
+interface SelectEventHook {
   (callback?: SelectEventHandler, deps?: any[]): SelectEvent
 }
 
-const useSelectEvent: SelectEventProps = (callback, deps = []) => {
+const useSelectEvent: SelectEventHook = (callback, deps = []) => {
   const { editor } = useEditor()
   const workspace = useCurrentWorkSpace()
   const selectEvent = useMemo(() => new SelectEvent({}, editor), [editor])

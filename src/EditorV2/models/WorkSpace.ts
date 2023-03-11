@@ -4,12 +4,6 @@ import { isElementsOverlap, isElementsInArea } from '../internal';
 import { generateUuid } from '../shared';
 import type { IClipBoxProps } from './ClipBox';
 
-const KeyBoard = {
-  LEFT: 'ArrowLeft',
-  UP: 'ArrowUp',
-  RIGHT: 'ArrowRight',
-  DOWN: 'ArrowDown',
-} as const;
 type ImageFiles = File | string;
 
 export interface WorkSpaceProps {
@@ -54,12 +48,10 @@ class WorkSpace {
       isResizing: computed,
       isElementOverlap: action,
       selectClipBoxInArea: action,
-      attach: action,
       select: action,
       // 批量选择
       batchSelect: action,
       checkOverlap: action,
-      onKeyPress: action,
       addClip: action,
       deleteClip: action,
     });
@@ -142,86 +134,6 @@ class WorkSpace {
     if (this.clips.length) {
       this.activeClipId = [this.clips[0].id];
     }
-  }
-
-  onKeyPress = (e: KeyboardEvent) => {
-    const keyCode = e.code;
-    if (this.activeClipId && this.currentClip.length > 0) {
-      switch (keyCode) {
-        case KeyBoard.LEFT: {
-          e.preventDefault();
-          this.currentClip.forEach(clip => {
-            clip.left = clip.left - 3
-          })
-          // this.isDragging = true
-          // this.draggingTarget = this.currentClip
-          // this.draggingType = 'ClipBox'
-          break;
-        }
-        case KeyBoard.UP: {
-          e.preventDefault();
-          this.currentClip.forEach(clip => {
-            clip.top = clip.top - 3
-          })
-          // this.isDragging = true
-          // this.draggingTarget = this.currentClip
-          // this.draggingType = 'ClipBox'
-          break;
-        }
-        case KeyBoard.RIGHT: {
-          e.preventDefault();
-          this.currentClip.forEach(clip => {
-            clip.left = clip.left + 3
-          })
-          // this.isDragging = true
-          // this.draggingTarget = this.currentClip
-          // this.draggingType = 'ClipBox'
-          break;
-        }
-        case KeyBoard.DOWN: {
-          e.preventDefault();
-          this.currentClip.forEach(clip => {
-            clip.top = clip.top + 3
-          })
-          // this.isDragging = true
-          // this.draggingTarget = this.currentClip
-          // this.draggingType = 'ClipBox'
-          break;
-        }
-        default: {
-          return;
-        }
-      }
-    }
-  };
-
-  onKeyUp = (e: KeyboardEvent) => {
-    const keyCode = e.code;
-    if (this.activeClipId.length && this.currentClip) {
-      switch (keyCode) {
-        case KeyBoard.LEFT:
-        case KeyBoard.UP:
-        case KeyBoard.RIGHT:
-        case KeyBoard.DOWN: {
-          this.checkOverlap();
-          // this.isDragging = false
-          // this.draggingTarget = null
-          // this.draggingType = ''
-        }
-        default: {
-          break;
-        }
-      }
-    }
-  };
-
-  attach() {
-    document.addEventListener('keydown', this.onKeyPress);
-    document.addEventListener('keyup', this.onKeyUp);
-    return () => {
-      document.removeEventListener('keydown', this.onKeyPress);
-      document.removeEventListener('keyup', this.onKeyUp);
-    };
   }
 }
 
