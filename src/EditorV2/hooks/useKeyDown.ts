@@ -3,7 +3,7 @@ import { KeyDownEvent } from '../models'
 import { useCurrentWorkSpace } from '.'
 
 interface KeyDownHook {
-  (callback?: (...args: any[]) => any, deps?: any[]): any
+  (callback?: (event: KeyboardEvent) => any, deps?: any[]): any
 }
 
 
