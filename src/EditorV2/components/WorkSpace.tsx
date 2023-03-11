@@ -2,10 +2,11 @@ import cls from 'classnames';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import { useEditor } from '../context';
-import { useCurrentWorkSpace, useSelectEvent } from '../hooks';
+import { useCurrentWorkSpace } from '../hooks';
 import { nextTick } from '../internal';
+import ClipBox from './ClipBox';
+import SelectMask from './SelectMask';
 import type { ImageFile } from '../models';
-import { default as ClipBox } from './ClipBox';
 
 type ImageProps = {
   image: ImageFile;
@@ -31,16 +32,11 @@ const WorkSpace = observer(() => {
   const { containerStyle, className, editor } = useEditor();
   const workspace = useCurrentWorkSpace();
   
-  // 注册当前工作区框选事件的消费方
-  const selectEvent = useSelectEvent((payload) => {
-  const selected = workspace.selectClipBoxInArea(payload)
-  workspace.activeClipId = selected.map(clip => clip.id)
-  }, []);
-  
   useEffect(() => {
     // 检查拖拽对象是否有重叠
     const run = () => nextTick(() => workspace.checkOverlap());
     document.addEventListener('mouseup', run);
+    // 工作区初始化: 按键事件
     const dispose = workspace.attach();
     run();
     return () => {
@@ -49,24 +45,10 @@ const WorkSpace = observer(() => {
     };
   }, [workspace]);
 
-  useEffect(() => {
-    // 点击工具栏框选时，要注册框选事件
-    if (workspace.mode === 'select') {
-      return workspace.selectEvent.attach()
-    }
-  }, [workspace, editor.container, workspace.mode])
 
   return (
     <div className={cls('image-editor', className)} style={containerStyle}>
-      <div
-        className={cls('image-editor__mask', { show: selectEvent.show })}
-        style={{
-          width: selectEvent.width,
-          height: selectEvent.height,
-          left: selectEvent.left,
-          top: selectEvent.top,
-        }}
-      />
+      <SelectMask />
       <Image image={editor.current.file} />
       {workspace.clips?.map((clip) => {
         return <ClipBox key={clip.id} clip={clip} />;

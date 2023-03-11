@@ -3,8 +3,8 @@ import React, { useEffect, useMemo } from 'react';
 import { ImageEditorContext } from '../context';
 import { Editor } from '../models';
 import type { IClipBoxProps } from '../models/ClipBox';
-import { default as Toolbar } from './Toolbar';
-import { default as WorkSpace } from './WorkSpace';
+import Toolbar from './Toolbar';
+import WorkSpace from './WorkSpace';
 
 type ImageEditorV2Props = {
   images: string[];

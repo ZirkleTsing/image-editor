@@ -5,6 +5,7 @@ import Subscriable from './Subscriable';
 type SelectEventProps = {};
 export type SelectEventPayload = {
   left: number;
+
   top: number;
   width: number;
   height: number;
