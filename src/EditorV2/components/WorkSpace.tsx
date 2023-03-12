@@ -1,11 +1,11 @@
+import React, { useEffect } from 'react';
 import cls from 'classnames';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
 import { useEditor } from '../context';
-import { useCurrentWorkSpace, useKeyEvent } from '../hooks';
-import { nextTick } from '../internal';
+import { useCurrentWorkSpace, useKeyBoardEvent } from '../hooks';
 import ClipBox from './ClipBox';
 import SelectMask from './SelectMask';
+import { nextTick } from '../internal'
 import type { ImageFile } from '../models';
 
 type ImageProps = {
@@ -31,8 +31,10 @@ const Image: React.FC<ImageProps> = observer((props) => {
 const WorkSpace = observer(() => {
   const { containerStyle, className, editor } = useEditor();
   const workspace = useCurrentWorkSpace();
-  useKeyEvent()
-  
+
+  useKeyBoardEvent()
+
+  // 注册拖拽事件: 元素重叠检查
   useEffect(() => {
     // 检查拖拽对象是否有重叠
     const run = () => nextTick(() => workspace.checkOverlap());
@@ -42,7 +44,6 @@ const WorkSpace = observer(() => {
       document.removeEventListener('mouseup', run);
     };
   }, [workspace]);
-
 
   return (
     <div className={cls('image-editor', className)} style={containerStyle}>

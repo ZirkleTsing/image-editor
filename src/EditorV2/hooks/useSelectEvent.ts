@@ -1,5 +1,5 @@
-import { useEffect, useMemo } from 'react'
-import { useCurrentWorkSpace } from '.'
+import { useEffect } from 'react'
+import { useCurrentWorkSpace, useEvent } from '.'
 import { SelectEvent, SelectEventHandler } from '../models'
 import { useEditor } from '../context'
 
@@ -10,12 +10,15 @@ interface SelectEventHook {
 const useSelectEvent: SelectEventHook = (callback, deps = []) => {
   const { editor } = useEditor()
   const workspace = useCurrentWorkSpace()
-  const selectEvent = useMemo(() => new SelectEvent({}, editor), [editor])
+  const selectEvent = useEvent(SelectEvent)
 
   useEffect(() => {
     // 点击工具栏框选时，要注册框选事件
     if (workspace.mode === 'select') {
-      return selectEvent.attach()
+      selectEvent.attach()
+      return () => {
+        selectEvent.detach()
+      }
     }
   }, [workspace, editor.container, workspace.mode])
 

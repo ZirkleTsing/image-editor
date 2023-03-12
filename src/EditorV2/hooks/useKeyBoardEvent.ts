@@ -1,11 +1,11 @@
 import { useCurrentWorkSpace, useKeyDown, useKeyUp } from '.'
 
-interface keyEventHook {
+interface KeyBoardEventHook {
   (callback?: () => any, deps?: any[]): any
 }
 
  // 工作区初始化: 按键事件
-const useKeyEvent: keyEventHook = () => {
+const useKeyBoardEvent: KeyBoardEventHook = () => {
   const workspace = useCurrentWorkSpace()
 
   // 注册keyDown keyUp事件
@@ -13,4 +13,4 @@ const useKeyEvent: keyEventHook = () => {
   useKeyUp(workspace.handleKeyUp, [workspace, workspace.id])
 }
 
-export default useKeyEvent
+export default useKeyBoardEvent

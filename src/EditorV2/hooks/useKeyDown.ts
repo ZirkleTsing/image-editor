@@ -1,29 +1,32 @@
-import { useMemo, useEffect } from 'react'
+import { useEffect } from 'react'
 import { KeyDownEvent } from '../models'
-import { useCurrentWorkSpace } from '.'
+import { useCurrentWorkSpace, useEvent } from '.'
 
 interface KeyDownHook {
-  (callback?: (event: KeyboardEvent) => any, deps?: any[]): any
+  (handler?: (event: KeyboardEvent) => any, deps?: any[]): any
 }
 
 
-const useKeyDown: KeyDownHook = (callback, deps = []) => {
+const useKeyDown: KeyDownHook = (handler, deps = []) => {
   const workspace = useCurrentWorkSpace()
-  const keydownEvent = useMemo(() => new KeyDownEvent(), [workspace])
+  const keydownEvent = useEvent(KeyDownEvent)
 
   useEffect(() => {
-    if (callback && typeof callback === 'function') {
-      keydownEvent.registerEvent(callback)
+    if (handler && typeof handler === 'function') {
+      keydownEvent.registerEvent(handler)
 
       return () => {
-        keydownEvent.unregisterEvent(callback)
+        keydownEvent.unregisterEvent(handler)
       }
     }
   }, [workspace, workspace.id, ...deps])
 
   useEffect(() => {
     // 点击工具栏框选时，要注册框选事件
-      return keydownEvent.attach()
+    keydownEvent.attach()
+    return () => {
+      keydownEvent.detach()
+    }
   }, [workspace, workspace.id])
 }
 

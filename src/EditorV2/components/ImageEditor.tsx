@@ -5,6 +5,7 @@ import { Editor } from '../models';
 import type { IClipBoxProps } from '../models/ClipBox';
 import Toolbar from './Toolbar';
 import WorkSpace from './WorkSpace';
+import EventProvider from './EventProvider';
 
 type ImageEditorV2Props = {
   images: string[];
@@ -36,8 +37,10 @@ const ImageEditorV2: (
       <ImageEditorContext.Provider
         value={{ editor, containerStyle, className }}
       >
-        <Toolbar />
-        <WorkSpace />
+        <EventProvider>
+          <Toolbar />
+          <WorkSpace />
+        </EventProvider>
       </ImageEditorContext.Provider>
     );
   },

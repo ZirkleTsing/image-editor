@@ -2,7 +2,6 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { Editor } from '..';
 import Subscriable from './Subscriable';
 
-type SelectEventProps = {};
 export type SelectEventPayload = {
   left: number;
 
@@ -25,7 +24,7 @@ class SelectEvent extends Subscriable<SelectEventHandler> {
   screenTop: number = 0;
   editor: Editor;
 
-  constructor(props: SelectEventProps, editor: Editor) {
+  constructor(editor: Editor) {
     super();
     this.editor = editor;
     makeObservable(this, {
@@ -104,14 +103,15 @@ class SelectEvent extends Subscriable<SelectEventHandler> {
       this.screenLeft = this.editor.container.getBoundingClientRect().left;
       this.screenTop = this.editor.container.getBoundingClientRect().top;
       this.editor.container.addEventListener('mousedown', this.handleMouseDown);
-      return () => {
-        if (this.editor.container) {
-          this.editor.container.removeEventListener(
-            'mousedown',
-            this.handleMouseDown,
-          );
-        }
-      };
+    }
+  }
+
+  detach() {
+    if (this.editor.container) {
+      this.editor.container.removeEventListener(
+        'mousedown',
+        this.handleMouseDown,
+      );
     }
   }
 }
