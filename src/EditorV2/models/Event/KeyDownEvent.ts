@@ -10,7 +10,8 @@ class KeyDownEvent extends Subscriable<KeyDownEventHandler> {
     this.editor = editor
     makeObservable(this, {
       handleKeyDown: action,
-      attach: action
+      attach: action,
+      detach: action
     })
   }
   handleKeyDown = (event: KeyboardEvent) => {

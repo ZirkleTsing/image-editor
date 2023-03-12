@@ -40,10 +40,13 @@ class SelectEvent extends Subscriable<SelectEventHandler> {
       top: computed,
       width: computed,
       height: computed,
+      isSelectMode: computed,
       handleMouseDown: action,
       handleMouseMove: action,
       handleMouseUp: action,
       reset: action,
+      attach: action,
+      detach: action
     });
   }
 
@@ -62,33 +65,43 @@ class SelectEvent extends Subscriable<SelectEventHandler> {
     return Math.abs(this.endY - this.startY);
   }
 
+  get isSelectMode() {
+    return this.editor.current.mode === 'select'
+  }
+
   /* 方法 */
   handleMouseDown = (event: MouseEvent) => {
-    this.show = true;
-    this.startX = event.clientX;
-    this.startY = event.clientY;
-    this.endX = event.clientX;
-    this.endY = event.clientY;
-    document.addEventListener('mousemove', this.handleMouseMove);
-    document.addEventListener('mouseup', this.handleMouseUp);
+    if (this.isSelectMode) {
+      this.show = true;
+      this.startX = event.clientX;
+      this.startY = event.clientY;
+      this.endX = event.clientX;
+      this.endY = event.clientY;
+      document.addEventListener('mousemove', this.handleMouseMove);
+      document.addEventListener('mouseup', this.handleMouseUp);
+    }
   };
   
   handleMouseMove = (event: MouseEvent) => {
-    this.endX = event.clientX;
-    this.endY = event.clientY;
+    if (this.isSelectMode) {
+      this.endX = event.clientX;
+      this.endY = event.clientY;
+    }
   };
   
   handleMouseUp = () => {
-    this.dispatch({
-      left: this.left,
-      top: this.top,
-      width: this.width,
-      height: this.height,
-    });
-    this.show = false;
-    this.reset();
-    document.removeEventListener('mousemove', this.handleMouseMove);
-    document.removeEventListener('mouseup', this.handleMouseUp);
+    if (this.isSelectMode) {
+      this.dispatch({
+        left: this.left,
+        top: this.top,
+        width: this.width,
+        height: this.height,
+      });
+      this.show = false;
+      this.reset();
+      document.removeEventListener('mousemove', this.handleMouseMove);
+      document.removeEventListener('mouseup', this.handleMouseUp);
+    }
   };
 
   reset() {
@@ -98,7 +111,7 @@ class SelectEvent extends Subscriable<SelectEventHandler> {
     this.endY = 0;
   }
 
-  attach() {
+  attach = () => {
     if (this.editor.container) {
       this.screenLeft = this.editor.container.getBoundingClientRect().left;
       this.screenTop = this.editor.container.getBoundingClientRect().top;
@@ -106,7 +119,7 @@ class SelectEvent extends Subscriable<SelectEventHandler> {
     }
   }
 
-  detach() {
+  detach = () => {
     if (this.editor.container) {
       this.editor.container.removeEventListener(
         'mousedown',

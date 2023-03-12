@@ -109,7 +109,9 @@ class WorkSpace {
 
   batchSelect = (payload: SelectEventPayload) => {
     const selected = this.selectClipBoxInArea(payload)
-    this.activeClipId = selected.map(clip => clip.id)
+    if (selected.length > 0) { // 没有框选出目标的话 不设置值 保留现状
+      this.activeClipId = selected.map(clip => clip.id)
+    }
   }
 
   // 检查元素是否重叠

@@ -19,14 +19,6 @@ const useKeyUp: KeyUpHook = (handler, deps = []) => {
       }
     }
   }, [workspace, workspace.id, ...deps])
-
-  useEffect(() => {
-    // 点击工具栏框选时，要注册框选事件
-    keyupEvent.attach()
-    return () => {
-      keyupEvent.detach()
-    }
-  }, [workspace, workspace.id])
 }
 
 export default useKeyUp

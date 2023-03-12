@@ -2,29 +2,29 @@ import { makeObservable, action } from 'mobx'
 import Subscriable from './Subscriable'
 import { Editor } from '..';
 
-type KeyUpEventHandler = (payload: KeyboardEvent) => any;
-class KeyUpEvent extends Subscriable<KeyUpEventHandler> {
+class MouseDown extends Subscriable {
   editor: Editor;
   constructor(editor: Editor) {
     super()
     this.editor = editor
     makeObservable(this, {
-      handleKeyUp: action,
+      handleMouseDown: action,
       attach: action,
       detach: action
     })
   }
-  handleKeyUp = (event: KeyboardEvent) => {
+
+  handleMouseDown = (event: MouseEvent) => {
     this.dispatch(event)
   }
 
   attach = () => {
-    document.addEventListener('keyup', this.handleKeyUp);
+    document.addEventListener('mousedown', this.handleMouseDown);
   }
 
   detach = () => {
-    document.removeEventListener('keyup', this.handleKeyUp);
+    document.removeEventListener('mousedown', this.handleMouseDown)
   }
 }
 
-export default KeyUpEvent
+export default MouseDown
