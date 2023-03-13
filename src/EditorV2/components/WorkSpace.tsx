@@ -38,7 +38,7 @@ const WorkSpace = observer(() => {
   // 注册拖拽事件: 元素重叠检查
   useEffect(() => {
     // 检查拖拽对象是否有重叠
-    const run = () => nextTick(() => workspace.checkOverlap());
+    const run = () => nextTick(() => workspace.checkOverlapElement());
     document.addEventListener('mouseup', run);
     run();
     return () => {

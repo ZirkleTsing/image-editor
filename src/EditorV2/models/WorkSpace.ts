@@ -25,7 +25,6 @@ class WorkSpace {
   elements: ClipBox[] = [];
   id: string;
   activeId: string[] = [];
-  activeElementType: 'ClipBox' | 'Anchor' | (string & {}) = '';
   isDragging: boolean = false;
   draggingTarget: any = null;
   draggingType: 'ClipBox' | 'Anchor' | 'Resizer' | (string & {}) = '';
@@ -56,13 +55,12 @@ class WorkSpace {
       current: computed,
       isResizing: computed,
       isElementOverlap: action,
-      selectClipBoxInArea: action,
       select: action,
       // 批量选择
       batchSelect: action,
       handleKeyPress: action,
       handleKeyUp: action,
-      checkOverlap: action,
+      checkOverlapElement: action,
       addClip: action,
       deleteClip: action,
     });
@@ -78,7 +76,6 @@ class WorkSpace {
 
   isElementOverlap(target: ClipBox) {
     const otherElements = this.elements.filter((element) => element !== target);
-
     return otherElements.reduce((isOverlap, element) => {
       return (
         isOverlap ||
@@ -90,17 +87,14 @@ class WorkSpace {
     }, false);
   }
 
-  // 找到当期工作区框选出来的dom
-  selectClipBoxInArea(payload: SelectEventPayload): Array<ClipBox> {
-    return this.elements.reduce<Array<ClipBox>>((buf, element) => {
-      if (isElementsInArea(element.container as HTMLElement, this.editor.container as HTMLElement, payload, )) {
-        return buf.concat(element)
-      } else {
-        return buf
-      }
-    }, [])
+  // 检查元素是否重叠
+  checkOverlapElement() {
+    this.elements.forEach((element) => {
+      element.checkOverlap();
+    });
   }
-
+  
+  // 单选选中元素
   select(id: string | string[]) {
     if (Array.isArray(id)) {
       this.activeId = id
@@ -109,18 +103,19 @@ class WorkSpace {
     }
   }
 
-  batchSelect = (payload: SelectEventPayload) => {
-    const selected = this.selectClipBoxInArea(payload)
+  // 框选区域批量选中元素
+  batchSelect = (batchSelectionArea: SelectEventPayload) => {
+    const selected = this.elements.reduce<Array<ClipBox>>((buf, element) => {
+      // 找到当期工作区框选出来的dom
+      if (isElementsInArea(element.container as HTMLElement, this.editor.container as HTMLElement, batchSelectionArea)) {
+        return buf.concat(element)
+      } else {
+        return buf
+      }
+    }, [])
     if (selected.length > 0) { // 没有框选出目标的话 不设置值 保留现状
       this.activeId = selected.map(element => element.id)
     }
-  }
-
-  // 检查元素是否重叠
-  checkOverlap() {
-    this.elements.forEach((element) => {
-      element.isClipOverlap();
-    });
   }
 
   addClip() {
@@ -200,7 +195,7 @@ class WorkSpace {
         case KeyBoard.UP:
         case KeyBoard.RIGHT:
         case KeyBoard.DOWN: {
-          this.checkOverlap();
+          this.checkOverlapElement();
         }
         default: {
           break;

@@ -25,7 +25,6 @@ type IClipBoxResizer = {
 };
 
 class ClipBox {
-  type = 'ClipBox'
   clipLeft: number = 0;
   clipTop: number = 0;
   clipWidth: number = 100;
@@ -73,7 +72,7 @@ class ClipBox {
       top: computed,
       height: computed,
       width: computed,
-      isClipOverlap: action,
+      checkOverlap: action,
       updatePosition: action,
       attachContainer: action,
       attachResizer: action
@@ -178,7 +177,7 @@ class ClipBox {
     }
   };
 
-  isClipOverlap = () => {
+  checkOverlap = () => {
     // 判断当前元素是否重叠
     this.isOverlap = this.workspace.isElementOverlap(this)
   }

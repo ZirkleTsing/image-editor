@@ -38,14 +38,14 @@ export default observer<IClipBoxProps>((props) => {
       onClick={() => { worspace.select(clip.id) }}
     >
       <div className={cls("image-editor__clip-content")}>{clip.index}</div>
-      <div className={cls("image-editor__clip-item", "image-editor__clip__leftTop", `clip-resizer-leftTop-${clip.id}`)} />
-      <div className={cls("image-editor__clip-item", "image-editor__clip__rightTop", `clip-resizer-rightTop-${clip.id}`)} />
-      <div className={cls("image-editor__clip-item", "image-editor__clip__leftBottom", `clip-resizer-leftBottom-${clip.id}`)} />
-      <div className={cls("image-editor__clip-item", "image-editor__clip__rightBottom", `clip-resizer-rightBottom-${clip.id}`)} />
-      <div className={cls("image-editor__clip-item", "image-editor__clip__leftCenter", `clip-resizer-leftCenter-${clip.id}`)} />
-      <div className={cls("image-editor__clip-item", "image-editor__clip__rightCenter", `clip-resizer-rightCenter-${clip.id}`)} />
-      <div className={cls("image-editor__clip-item", "image-editor__clip__topCenter", `clip-resizer-topCenter-${clip.id}`)} />
-      <div className={cls("image-editor__clip-item", "image-editor__clip__bottomCenter", `clip-resizer-bottomCenter-${clip.id}`)} />
+      <div className={cls("image-editor__clip-resize-item", "image-editor__clip__leftTop", `clip-resizer-leftTop-${clip.id}`)} />
+      <div className={cls("image-editor__clip-resize-item", "image-editor__clip__rightTop", `clip-resizer-rightTop-${clip.id}`)} />
+      <div className={cls("image-editor__clip-resize-item", "image-editor__clip__leftBottom", `clip-resizer-leftBottom-${clip.id}`)} />
+      <div className={cls("image-editor__clip-resize-item", "image-editor__clip__rightBottom", `clip-resizer-rightBottom-${clip.id}`)} />
+      <div className={cls("image-editor__clip-resize-item", "image-editor__clip__leftCenter", `clip-resizer-leftCenter-${clip.id}`)} />
+      <div className={cls("image-editor__clip-resize-item", "image-editor__clip__rightCenter", `clip-resizer-rightCenter-${clip.id}`)} />
+      <div className={cls("image-editor__clip-resize-item", "image-editor__clip__topCenter", `clip-resizer-topCenter-${clip.id}`)} />
+      <div className={cls("image-editor__clip-resize-item", "image-editor__clip__bottomCenter", `clip-resizer-bottomCenter-${clip.id}`)} />
     </div>
   );
 })

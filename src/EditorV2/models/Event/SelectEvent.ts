@@ -4,7 +4,6 @@ import Subscriable, { Event } from './Subscriable';
 
 export type SelectEventPayload = {
   left: number;
-
   top: number;
   width: number;
   height: number;
