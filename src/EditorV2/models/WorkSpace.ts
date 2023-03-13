@@ -11,6 +11,7 @@ const KeyBoard = {
   UP: 'ArrowUp',
   RIGHT: 'ArrowRight',
   DOWN: 'ArrowDown',
+  Backspace: 'Backspace',
 } as const;
 
 export interface WorkSpaceProps {
@@ -21,37 +22,38 @@ export interface WorkSpaceProps {
 class WorkSpace {
   file: ImageFile;
   editor: Editor;
-  clips: ClipBox[] = [];
+  elements: ClipBox[] = [];
   id: string;
-  activeClipId: string[] = [];
+  activeId: string[] = [];
+  activeElementType: 'ClipBox' | 'Anchor' | (string & {}) = '';
   isDragging: boolean = false;
   draggingTarget: any = null;
-  draggingType: 'ClipBox' | 'Resizer' | (string & {}) = '';
+  draggingType: 'ClipBox' | 'Anchor' | 'Resizer' | (string & {}) = '';
   // select 框选模式 normal 常规模式
   mode: 'select' | 'normal' | (string & {}) = 'normal'
 
   constructor(props: WorkSpaceProps, editor: Editor) {
     this.file = new ImageFile({ file: props.file }, editor);
-    this.clips =
+    this.elements = // TODO
       props.positions?.map(
         (position, index) => new ClipBox({ position, index }, editor, this),
       ) || [];
     this.editor = editor;
     this.id = generateUuid();
-    if (this.clips.length > 0) {
-      this.activeClipId = [this.clips[0].id];
+    if (this.elements.length > 0) {
+      this.activeId = [this.elements[0].id]; // TODO
     }
     makeObservable(this, {
       file: observable,
       editor: observable,
-      clips: observable,
+      elements: observable,
       id: observable,
-      activeClipId: observable,
+      activeId: observable,
       isDragging: observable,
       draggingType: observable,
       draggingTarget: observable,
       mode: observable,
-      currentClip: computed,
+      current: computed,
       isResizing: computed,
       isElementOverlap: action,
       selectClipBoxInArea: action,
@@ -70,19 +72,19 @@ class WorkSpace {
     return this.draggingType === 'Resizer' && this.isDragging;
   }
 
-  get currentClip() {
-    return this.clips.filter((clip) => this.activeClipId.includes(clip.id));
+  get current() {
+    return this.elements.filter((element) => this.activeId.includes(element.id));
   }
 
   isElementOverlap(target: ClipBox) {
-    const otherClip = this.clips.filter((clip) => clip !== target);
+    const otherElements = this.elements.filter((element) => element !== target);
 
-    return otherClip.reduce((isOverlap, clip) => {
+    return otherElements.reduce((isOverlap, element) => {
       return (
         isOverlap ||
         isElementsOverlap(
           target.container as HTMLElement,
-          clip.container as HTMLDivElement,
+          element.container as HTMLDivElement,
         )
       );
     }, false);
@@ -90,9 +92,9 @@ class WorkSpace {
 
   // 找到当期工作区框选出来的dom
   selectClipBoxInArea(payload: SelectEventPayload): Array<ClipBox> {
-    return this.clips.reduce<Array<ClipBox>>((buf, clip) => {
-      if (isElementsInArea(clip.container as HTMLElement, this.editor.container as HTMLElement, payload, )) {
-        return buf.concat(clip)
+    return this.elements.reduce<Array<ClipBox>>((buf, element) => {
+      if (isElementsInArea(element.container as HTMLElement, this.editor.container as HTMLElement, payload, )) {
+        return buf.concat(element)
       } else {
         return buf
       }
@@ -101,23 +103,23 @@ class WorkSpace {
 
   select(id: string | string[]) {
     if (Array.isArray(id)) {
-      this.activeClipId = id
+      this.activeId = id
     } else {
-      this.activeClipId = [id];
+      this.activeId = [id];
     }
   }
 
   batchSelect = (payload: SelectEventPayload) => {
     const selected = this.selectClipBoxInArea(payload)
     if (selected.length > 0) { // 没有框选出目标的话 不设置值 保留现状
-      this.activeClipId = selected.map(clip => clip.id)
+      this.activeId = selected.map(element => element.id)
     }
   }
 
   // 检查元素是否重叠
   checkOverlap() {
-    this.clips.forEach((clip) => {
-      clip.isClipOverlap();
+    this.elements.forEach((element) => {
+      element.isClipOverlap();
     });
   }
 
@@ -125,62 +127,66 @@ class WorkSpace {
     const newClipBox = new ClipBox(
       {
         position: { left: 20, top: 20, width: 100, height: 100 },
-        index: this.clips.length,
+        index: this.elements.length,
       },
       this.editor,
       this,
     );
-    this.clips.push(newClipBox);
-    this.activeClipId = [newClipBox.id];
+    this.elements.push(newClipBox);
+    this.activeId = [newClipBox.id];
   }
 
   deleteClip() {
-    this.clips = this.clips.reduce<Array<ClipBox>>((buf, clip) => {
-      if (this.currentClip.includes(clip)) {
+    this.elements = this.elements.reduce<Array<ClipBox>>((buf, element) => {
+      if (this.current.includes(element)) {
         return buf
       } else {
-        return buf.concat(clip)
+        return buf.concat(element)
       }
     }, [])
-    if (this.clips.length) {
-      this.activeClipId = [this.clips[0].id];
+    if (this.elements.length) {
+      this.activeId = [this.elements[0].id];
     }
   }
 
   handleKeyPress = (e: KeyboardEvent) => {
     const keyCode = e.code;
-    if (this.activeClipId && this.currentClip.length > 0) {
-      switch (keyCode) {
-        case KeyBoard.LEFT: {
-          e.preventDefault();
-          this.currentClip.forEach(clip => {
-            clip.left = clip.left - 3
-          })
-          break;
-        }
-        case KeyBoard.UP: {
-          e.preventDefault();
-          this.currentClip.forEach(clip => {
-            clip.top = clip.top - 3
-          })
-          break;
-        }
-        case KeyBoard.RIGHT: {
-          e.preventDefault();
-          this.currentClip.forEach(clip => {
-            clip.left = clip.left + 3
-          })
-          break;
-        }
-        case KeyBoard.DOWN: {
-          e.preventDefault();
-          this.currentClip.forEach(clip => {
-            clip.top = clip.top + 3
-          })
-          break;
-        }
-        default: {
-          return;
+    if (e.target === document.body) {
+      e.stopPropagation();
+      e.preventDefault();
+      if (this.activeId && this.current.length > 0) {
+        switch (keyCode) {
+          case KeyBoard.LEFT: {
+            this.current.forEach(element => {
+              element.left = element.left - 3
+            })
+            break;
+          }
+          case KeyBoard.UP: {
+            this.current.forEach(element => {
+              element.top = element.top - 3
+            })
+            break;
+          }
+          case KeyBoard.RIGHT: {
+            this.current.forEach(element => {
+              element.left = element.left + 3
+            })
+            break;
+          }
+          case KeyBoard.DOWN: {
+            this.current.forEach(element => {
+              element.top = element.top + 3
+            })
+            break;
+          }
+          case KeyBoard.Backspace: {
+            this.deleteClip()
+            break;
+          }
+          default: {
+            return;
+          }
         }
       }
     }
@@ -188,7 +194,7 @@ class WorkSpace {
 
   handleKeyUp = (e: KeyboardEvent) => {
     const keyCode = e.code;
-    if (this.activeClipId.length && this.currentClip) {
+    if (this.activeId.length && this.current) {
       switch (keyCode) {
         case KeyBoard.LEFT:
         case KeyBoard.UP:

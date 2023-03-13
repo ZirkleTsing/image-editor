@@ -5,7 +5,7 @@ import { Spin } from 'antd';
 import cls from 'classnames';
 import { observer } from 'mobx-react-lite';
 import { useEditor } from '../context';
-import { useCurrentClip, useCurrentWorkSpace } from '../hooks';
+import { useCurrentDragItem, useCurrentWorkSpace } from '../hooks';
 import type { WorkSpace } from '../models';
 
 interface TabItemProps {
@@ -39,7 +39,7 @@ const TabItem: React.FC<TabItemProps> = observer((props) => {
 
 const ToolBar = observer(() => {
   const { editor, containerStyle } = useEditor();
-  const currentClip = useCurrentClip();
+  const currentDragItem = useCurrentDragItem();
   const currentWorkSpace = useCurrentWorkSpace();
   const renderTab = () => {
     if (editor.workspaces.length < 2) {
@@ -56,16 +56,16 @@ const ToolBar = observer(() => {
         className="image-editor__files-controller"
         style={{ width: containerStyle?.width }}
       >
-        {currentClip.length === 1 && (
+        {currentDragItem.length === 1 && (
           // 非批量选择
           <Fragment>
             <div className="image-editor__files-controller__item">
               <span className="label">X:&nbsp;</span>
               <input
                 type="number"
-                value={currentClip[0].left}
+                value={currentDragItem[0].left}
                 onChange={(e) => {
-                  currentClip[0].left = Number(e.target.value);
+                  currentDragItem[0].left = Number(e.target.value);
                 }}
               />
             </div>
@@ -73,9 +73,9 @@ const ToolBar = observer(() => {
               <span className="label">Y:&nbsp;</span>
               <input
                 type="number"
-                value={currentClip[0].top}
+                value={currentDragItem[0].top}
                 onChange={(e) => {
-                  currentClip[0].top = Number(e.target.value);
+                  currentDragItem[0].top = Number(e.target.value);
                 }}
               />
             </div>
@@ -83,9 +83,9 @@ const ToolBar = observer(() => {
               <span className="label">W:&nbsp;</span>
               <input
                 type="number"
-                value={currentClip[0].width}
+                value={currentDragItem[0].width}
                 onChange={(e) => {
-                  currentClip[0].width = Number(e.target.value);
+                  currentDragItem[0].width = Number(e.target.value);
                 }}
               />
             </div>
@@ -93,9 +93,9 @@ const ToolBar = observer(() => {
               <span className="label">H:&nbsp;</span>
               <input
                 type="number"
-                value={currentClip[0].height}
+                value={currentDragItem[0].height}
                 onChange={(e) => {
-                  currentClip[0].height = Number(e.target.value);
+                  currentDragItem[0].height = Number(e.target.value);
                 }}
               />
             </div>
@@ -121,7 +121,7 @@ const ToolBar = observer(() => {
                 currentWorkSpace.addClip();
               }}
             />
-            {currentWorkSpace.activeClipId.length && (
+            {currentWorkSpace.activeId.length && (
               <MinusSquareOutlined
                 className="minus"
                 onClick={() => {

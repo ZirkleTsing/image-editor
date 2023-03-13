@@ -25,9 +25,9 @@ export default observer<IClipBoxProps>((props) => {
     <div
       className={cls("image-editor__clip", `clip-${clip.id}`, {
         overlap: clip.isOverlap,
-        active: worspace.activeClipId.includes(clip.id) ,
-        resizing: worspace.isResizing && worspace.activeClipId.includes(clip.id),
-        moving: worspace.isDragging && worspace.draggingType === 'ClipBox' &&  worspace.activeClipId.includes(clip.id),
+        active: worspace.activeId.includes(clip.id) ,
+        resizing: worspace.isResizing && worspace.activeId.includes(clip.id),
+        moving: worspace.isDragging && worspace.draggingType === 'ClipBox' &&  worspace.activeId.includes(clip.id),
       })}
       style={{
         width: Number(clip.width),

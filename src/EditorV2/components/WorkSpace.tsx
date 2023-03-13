@@ -50,8 +50,8 @@ const WorkSpace = observer(() => {
     <div className={cls('image-editor', className)} style={containerStyle}>
       <SelectMask />
       <Image image={editor.current.file} />
-      {workspace.clips?.map((clip) => {
-        return <ClipBox key={clip.id} clip={clip} />;
+      {workspace.elements?.map((element) => {
+        return <ClipBox key={element.id} clip={element} />;
       })}
     </div>
   );

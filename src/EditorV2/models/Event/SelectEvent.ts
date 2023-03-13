@@ -79,7 +79,7 @@ class SelectEvent extends Subscriable<SelectEventHandler> implements Event {
       this.show = true;
       this.screenLeft = this.editor.container!.getBoundingClientRect().left
       this.screenTop = this.editor.container!.getBoundingClientRect().top
-      this.startX = event.clientX + this.scrollLeft
+      this.startX = event.clientX /** 视口 */ + this.scrollLeft /** 内部滚动 */
       this.startY = event.clientY + this.scrollTop;
       this.endX = event.clientX + this.screenLeft;
       this.endY = event.clientY + this.screenTop;
@@ -112,6 +112,7 @@ class SelectEvent extends Subscriable<SelectEventHandler> implements Event {
 
   handleScroll = (event: any) => {
     event.stopPropagation()
+    /** 内部滚动 */
     this.scrollLeft = event.currentTarget.scrollLeft
     this.scrollTop = event.currentTarget.scrollTop
   }

@@ -25,6 +25,7 @@ type IClipBoxResizer = {
 };
 
 class ClipBox {
+  type = 'ClipBox'
   clipLeft: number = 0;
   clipTop: number = 0;
   clipWidth: number = 100;
