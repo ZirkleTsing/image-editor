@@ -27,4 +27,9 @@ class Subscriable<Event = (...args: any[]) => any, Payload = Event extends (payl
   };
 }
 
+export abstract class Event {
+  abstract attach: () => any
+  abstract detach: () => any
+}
+
 export default Subscriable;

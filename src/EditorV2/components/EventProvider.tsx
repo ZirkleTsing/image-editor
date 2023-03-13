@@ -23,6 +23,7 @@ const EventProvider: React.FC<React.PropsWithChildren<{}>> = (props) => {
   }, [workspace, workspace.id]) // 每个工作区都需要独立的实例，工作区注册事件执行回调是独立的
 
   useEffect(() => {
+    // 每个事件实例都需要实现 attach detach进行初始化
     eventInstances.forEach(item => {
       item.Instance?.attach?.()
     })

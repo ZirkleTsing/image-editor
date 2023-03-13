@@ -297,9 +297,9 @@ class ClipBox {
       };
 
       const onMouseDown = (mouseEvent: MouseEvent) => {
+        mouseEvent.stopPropagation();
         this.workspace.select(this.id)
         this.workspace.mode = 'normal'
-        mouseEvent.stopPropagation();
         this.workspace.isDragging = true;
         this.workspace.draggingTarget = this;
         this.workspace.draggingType = 'Resizer';

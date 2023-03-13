@@ -1,9 +1,9 @@
 import { makeObservable, action } from 'mobx'
-import Subscriable from './Subscriable'
+import Subscriable, { Event } from './Subscriable'
 import { Editor } from '..';
 
 type KeyUpEventHandler = (payload: KeyboardEvent) => any;
-class KeyUpEvent extends Subscriable<KeyUpEventHandler> {
+class KeyUpEvent extends Subscriable<KeyUpEventHandler> implements Event {
   editor: Editor;
   constructor(editor: Editor) {
     super()

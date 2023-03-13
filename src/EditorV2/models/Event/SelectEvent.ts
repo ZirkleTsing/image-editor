@@ -1,6 +1,6 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 import { Editor } from '..';
-import Subscriable from './Subscriable';
+import Subscriable, { Event } from './Subscriable';
 
 export type SelectEventPayload = {
   left: number;
@@ -14,7 +14,7 @@ export type SelectEventHandler = (payload: SelectEventPayload) => any;
 /**
  * 支持框选批量选择
  */
-class SelectEvent extends Subscriable<SelectEventHandler> {
+class SelectEvent extends Subscriable<SelectEventHandler> implements Event {
   show: boolean = false;
   startX: number = 0;
   startY: number = 0;
@@ -22,6 +22,8 @@ class SelectEvent extends Subscriable<SelectEventHandler> {
   endY: number = 0;
   screenLeft: number = 0;
   screenTop: number = 0;
+  scrollLeft: number = 0
+  scrollTop: number = 0;
   editor: Editor;
 
   constructor(editor: Editor) {
@@ -71,6 +73,7 @@ class SelectEvent extends Subscriable<SelectEventHandler> {
 
   /* 方法 */
   handleMouseDown = (event: MouseEvent) => {
+    console.log(window.scrollY)
     if (this.isSelectMode) {
       this.show = true;
       this.startX = event.clientX;
@@ -113,8 +116,8 @@ class SelectEvent extends Subscriable<SelectEventHandler> {
 
   attach = () => {
     if (this.editor.container) {
-      this.screenLeft = this.editor.container.getBoundingClientRect().left;
-      this.screenTop = this.editor.container.getBoundingClientRect().top;
+      this.screenLeft = this.editor.container.getBoundingClientRect().left
+      this.screenTop = this.editor.container.getBoundingClientRect().top
       this.editor.container.addEventListener('mousedown', this.handleMouseDown);
     }
   }

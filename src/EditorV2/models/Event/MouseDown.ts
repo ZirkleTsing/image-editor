@@ -1,8 +1,8 @@
 import { makeObservable, action } from 'mobx'
-import Subscriable from './Subscriable'
+import Subscriable, { Event } from './Subscriable'
 import { Editor } from '..';
 
-class MouseDown extends Subscriable {
+class MouseDown extends Subscriable implements Event {
   editor: Editor;
   constructor(editor: Editor) {
     super()
