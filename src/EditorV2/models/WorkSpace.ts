@@ -91,6 +91,7 @@ class WorkSpace {
     return this.draggingType === 'Resizer' && this.isDragging;
   }
 
+  // 当前选中的元素
   get current() {
     return this.elements.filter((element) => this.activeId.includes(element.id));
   }
@@ -139,6 +140,7 @@ class WorkSpace {
     }
   }
 
+  // 添加元素
   add(type = 'ClipBox') {
     if (type === 'ClipBox') {
       const newClipBox = new ClipBox(
@@ -154,6 +156,7 @@ class WorkSpace {
     }
   }
 
+  // 删除元素
   delete() {
     this.elements = this.elements.reduce<Array<WorkspaceElement>>((buf, element) => {
       if (this.current.includes(element)) {
@@ -167,6 +170,7 @@ class WorkSpace {
     }
   }
 
+  // 工作区快捷键处理函数
   handleKeyPress = (e: KeyboardEvent) => {
     const keyCode = e.code;
     if (e.target === document.body) {
@@ -210,6 +214,7 @@ class WorkSpace {
     }
   }
 
+  // 工作区快捷键处理函数
   handleKeyUp = (e: KeyboardEvent) => {
     const keyCode = e.code;
     if (this.activeId.length && this.current) {
