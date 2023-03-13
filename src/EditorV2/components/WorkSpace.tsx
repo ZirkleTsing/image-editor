@@ -4,6 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { useEditor } from '../context';
 import { useCurrentWorkSpace, useKeyBoardEvent } from '../hooks';
 import ClipBox from './ClipBox';
+import Anchor from './Anchor';
 import SelectMask from './SelectMask';
 import { nextTick } from '../internal'
 import type { ImageFile } from '../models';
@@ -51,7 +52,14 @@ const WorkSpace = observer(() => {
       <SelectMask />
       <Image image={editor.current.file} />
       {workspace.elements?.map((element) => {
-        return <ClipBox key={element.id} clip={element} />;
+        console.log('element:', element, element.type)
+        if (element.type === 'ClipBox') {
+          return <ClipBox key={element.id} clip={element as any} />;
+        } else if (element.type === 'Anchor') {
+          return <Anchor key={element.id} anchor={element as any} />;
+        } else {
+          return null
+        }
       })}
     </div>
   );

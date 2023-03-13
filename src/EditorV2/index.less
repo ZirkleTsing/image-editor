@@ -124,7 +124,7 @@
     }
   }
 
-  &__clip {
+  &__clip, &__anchor {
     position: absolute;
     border: 1px solid #0000cd;
     z-index: 99;
@@ -139,6 +139,9 @@
     &.active {
       z-index: 10;
       .image-editor__clip-resize-item {
+        display: unset;
+      }
+      .image-editor__anchor-resize-item {
         display: unset;
       }
     }
@@ -160,6 +163,10 @@
       background-color: #fff;
       position: absolute;
       display: none;
+
+      &.unResizable {
+        cursor: unset!important;
+      }
     }
     &__leftTop {
       top: -3px;

@@ -1,10 +1,11 @@
 import { action, computed, makeObservable, observable } from 'mobx';
+import WorkspaceElement from './Element';
 import { generateUuid } from '../shared';
 import type { Position } from '../types';
 import type { Editor, WorkSpace } from '.';
 
 export interface IClipBoxProps {
-  position?: {
+  position: {
     left: number;
     top: number;
     width: number;
@@ -24,7 +25,8 @@ type IClipBoxResizer = {
   bottomCenter: HTMLDivElement | null;
 };
 
-class ClipBox {
+class ClipBox implements WorkspaceElement {
+  type = "ClipBox";
   clipLeft: number = 0;
   clipTop: number = 0;
   clipWidth: number = 100;

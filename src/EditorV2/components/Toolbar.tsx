@@ -118,14 +118,14 @@ const ToolBar = observer(() => {
             <PlusSquareOutlined
               className="plus"
               onClick={() => {
-                currentWorkSpace.addClip();
+                currentWorkSpace.add();
               }}
             />
             {currentWorkSpace.activeId.length && (
               <MinusSquareOutlined
                 className="minus"
                 onClick={() => {
-                  currentWorkSpace.deleteClip();
+                  currentWorkSpace.delete();
                 }}
               />
             )}

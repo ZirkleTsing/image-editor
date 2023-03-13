@@ -7,7 +7,15 @@ type ImageFiles = File[] | string[];
 interface EditorProps {
   files: ImageFiles;
   ref: string
-  positions?: WorkSpaceProps['positions']
+  configs?: Array<{
+    type: 'CLIP' | 'ANCHOR',
+    position: {
+      left: number;
+      top: number;
+      width: number;
+      height: number;
+    }
+  }>
 }
 
 class Editor {
@@ -18,7 +26,8 @@ class Editor {
   workspaces: Array<WorkSpace>
   activeId: string
   constructor(props: EditorProps) {
-    this.workspaces = props.files.map((file) => new WorkSpace({ file, positions: props.positions }, this))
+    const { configs = [] } = props
+    this.workspaces = props.files.map((file) => new WorkSpace({ file, configs }, this))
     this.ref = props.ref
     this.activeId = this.workspaces.length > 0 ? this.workspaces[0].id : ''
     makeObservable(this, {

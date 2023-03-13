@@ -1,8 +1,8 @@
 import { action, computed, makeObservable, observable } from 'mobx';
-import { ClipBox, Editor, ImageFile, SelectEventPayload } from '.';
+import WorkspaceElement from './Element';
+import { ClipBox, Anchor, Editor, ImageFile, SelectEventPayload } from '.';
 import { isElementsOverlap, isElementsInArea } from '../internal';
 import { generateUuid } from '../shared';
-import type { IClipBoxProps } from './ClipBox';
 
 type ImageFiles = File | string;
 
@@ -16,13 +16,21 @@ const KeyBoard = {
 
 export interface WorkSpaceProps {
   file: ImageFiles;
-  positions?: Array<IClipBoxProps['position']>;
+  configs: Array<{
+    type: 'CLIP' | 'ANCHOR',
+    position: {
+      left: number;
+      top: number;
+      width: number;
+      height: number;
+    }
+  }>
 }
 
 class WorkSpace {
   file: ImageFile;
   editor: Editor;
-  elements: ClipBox[] = [];
+  elements: Array<WorkspaceElement> = [];
   id: string;
   activeId: string[] = [];
   isDragging: boolean = false;
@@ -33,9 +41,22 @@ class WorkSpace {
 
   constructor(props: WorkSpaceProps, editor: Editor) {
     this.file = new ImageFile({ file: props.file }, editor);
-    this.elements = // TODO
-      props.positions?.map(
-        (position, index) => new ClipBox({ position, index }, editor, this),
+    this.elements =
+      props.configs?.map(
+        (config, index) => {
+          switch(config.type) {
+            case 'CLIP': {
+              return new ClipBox({ position: config.position, index }, editor, this)
+            }
+            case 'ANCHOR': {
+              return new Anchor({ position: config.position, index }, editor, this)
+            }
+            default: {
+              return new ClipBox({ position: config.position, index }, editor, this)
+            }
+          }
+          
+        },
       ) || [];
     this.editor = editor;
     this.id = generateUuid();
@@ -61,8 +82,8 @@ class WorkSpace {
       handleKeyPress: action,
       handleKeyUp: action,
       checkOverlapElement: action,
-      addClip: action,
-      deleteClip: action,
+      add: action,
+      delete: action,
     });
   }
 
@@ -74,7 +95,7 @@ class WorkSpace {
     return this.elements.filter((element) => this.activeId.includes(element.id));
   }
 
-  isElementOverlap(target: ClipBox) {
+  isElementOverlap(target: WorkspaceElement) {
     const otherElements = this.elements.filter((element) => element !== target);
     return otherElements.reduce((isOverlap, element) => {
       return (
@@ -105,7 +126,7 @@ class WorkSpace {
 
   // 框选区域批量选中元素
   batchSelect = (batchSelectionArea: SelectEventPayload) => {
-    const selected = this.elements.reduce<Array<ClipBox>>((buf, element) => {
+    const selected = this.elements.reduce<Array<WorkspaceElement>>((buf, element) => {
       // 找到当期工作区框选出来的dom
       if (isElementsInArea(element.container as HTMLElement, this.editor.container as HTMLElement, batchSelectionArea)) {
         return buf.concat(element)
@@ -118,21 +139,23 @@ class WorkSpace {
     }
   }
 
-  addClip() {
-    const newClipBox = new ClipBox(
-      {
-        position: { left: 20, top: 20, width: 100, height: 100 },
-        index: this.elements.length,
-      },
-      this.editor,
-      this,
-    );
-    this.elements.push(newClipBox);
-    this.activeId = [newClipBox.id];
+  add(type = 'ClipBox') {
+    if (type === 'ClipBox') {
+      const newClipBox = new ClipBox(
+        {
+          position: { left: 20, top: 20, width: 100, height: 100 },
+          index: this.elements.length,
+        },
+        this.editor,
+        this,
+      );
+      this.elements.push(newClipBox);
+      this.activeId = [newClipBox.id];
+    }
   }
 
-  deleteClip() {
-    this.elements = this.elements.reduce<Array<ClipBox>>((buf, element) => {
+  delete() {
+    this.elements = this.elements.reduce<Array<WorkspaceElement>>((buf, element) => {
       if (this.current.includes(element)) {
         return buf
       } else {
@@ -176,7 +199,7 @@ class WorkSpace {
             break;
           }
           case KeyBoard.Backspace: {
-            this.deleteClip()
+            this.delete()
             break;
           }
           default: {

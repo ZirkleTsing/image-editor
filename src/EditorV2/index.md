@@ -17,9 +17,19 @@ export default () => {
     <ImageEditorV2
       ref={editorRef}
       containerStyle={{ width: 600, height: 600 }}
-      positions={[
-        { left: 80, top: 80, width: 120, height: 120 },
-        { left: 20, top: 20, width: 40, height: 40 }
+      configs={[
+        {
+          type: 'CLIP',
+          position: { left: 80, top: 80, width: 120, height: 120 }
+        },
+        {
+          type: 'CLIP',
+          position: { left: 20, top: 20, width: 40, height: 40 }
+        },
+        {
+          type: 'ANCHOR',
+          position: { left: 180, top: 180, width: 40, height: 40 }  
+        }
       ]}
       images={[
         'https://images.pexels.com/photos/3791466/pexels-photo-3791466.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
