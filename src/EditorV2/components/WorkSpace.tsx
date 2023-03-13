@@ -24,6 +24,7 @@ const Image: React.FC<ImageProps> = observer((props) => {
       className="image-editor__img"
       onDragStart={(e) => e.preventDefault()}
       src={image.content || ''}
+      onScroll={e => console.log(e.target)}
     />
   );
 });

@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
-import { MinusSquareOutlined, PlusSquareOutlined, ExpandOutlined } from '@ant-design/icons';
+import Icon, { MinusSquareOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { MouseIcon } from './Icons'
 import { Spin } from 'antd';
 import cls from 'classnames';
 import { observer } from 'mobx-react-lite';
@@ -107,11 +108,11 @@ const ToolBar = observer(() => {
             {currentWorkSpace.file.naturalHeight}
           </span>
         </div>
-        <div className="image-editor__files-controller__item">
+        {/* <div className="image-editor__files-controller__item">
           <span className="label">S:&nbsp;</span>
           <span className="value">{currentWorkSpace.file.size}</span>
-        </div>
-        <div>
+        </div> */}
+        {/* <div> */}
           <div className="image-editor__files-controller__item">
             <span className="label">热区:&nbsp;</span>
             <PlusSquareOutlined
@@ -131,11 +132,15 @@ const ToolBar = observer(() => {
           </div>
           <div className="image-editor__files-controller__item">
             <span className="label">框选:&nbsp;</span>  
-            <ExpandOutlined className={cls("select", { active: currentWorkSpace.mode === 'select' })} onClick={() => {
-              currentWorkSpace.mode = currentWorkSpace.mode === 'select' ?  'normal' : 'select'
-            }} />
+            <Icon
+              component={MouseIcon}
+              style={{ fontSize: 16 }}
+              className={cls("select", { active: currentWorkSpace.mode === 'select' })} onClick={() => {
+                currentWorkSpace.mode = currentWorkSpace.mode === 'select' ?  'normal' : 'select'
+              }}
+            />
           </div>
-        </div>
+        {/* </div> */}
       </div>
     );
   };

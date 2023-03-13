@@ -38,6 +38,8 @@ class SelectEvent extends Subscriable<SelectEventHandler> implements Event {
       editor: observable,
       screenLeft: observable,
       screenTop: observable,
+      scrollTop: observable,
+      scrollLeft: observable,
       left: computed,
       top: computed,
       width: computed,
@@ -73,13 +75,14 @@ class SelectEvent extends Subscriable<SelectEventHandler> implements Event {
 
   /* 方法 */
   handleMouseDown = (event: MouseEvent) => {
-    console.log(window.scrollY)
     if (this.isSelectMode) {
       this.show = true;
-      this.startX = event.clientX;
-      this.startY = event.clientY;
-      this.endX = event.clientX;
-      this.endY = event.clientY;
+      this.screenLeft = this.editor.container!.getBoundingClientRect().left
+      this.screenTop = this.editor.container!.getBoundingClientRect().top
+      this.startX = event.clientX + this.scrollLeft
+      this.startY = event.clientY + this.scrollTop;
+      this.endX = event.clientX + this.screenLeft;
+      this.endY = event.clientY + this.screenTop;
       document.addEventListener('mousemove', this.handleMouseMove);
       document.addEventListener('mouseup', this.handleMouseUp);
     }
@@ -87,16 +90,16 @@ class SelectEvent extends Subscriable<SelectEventHandler> implements Event {
   
   handleMouseMove = (event: MouseEvent) => {
     if (this.isSelectMode) {
-      this.endX = event.clientX;
-      this.endY = event.clientY;
+      this.endX = event.clientX + this.scrollLeft;
+      this.endY = event.clientY + this.scrollTop;
     }
   };
   
   handleMouseUp = () => {
     if (this.isSelectMode) {
       this.dispatch({
-        left: this.left,
-        top: this.top,
+        left: this.left - this.scrollLeft,
+        top: this.top - this.scrollTop,
         width: this.width,
         height: this.height,
       });
@@ -107,6 +110,12 @@ class SelectEvent extends Subscriable<SelectEventHandler> implements Event {
     }
   };
 
+  handleScroll = (event: any) => {
+    event.stopPropagation()
+    this.scrollLeft = event.currentTarget.scrollLeft
+    this.scrollTop = event.currentTarget.scrollTop
+  }
+
   reset() {
     this.startX = 0;
     this.startY = 0;
@@ -116,14 +125,14 @@ class SelectEvent extends Subscriable<SelectEventHandler> implements Event {
 
   attach = () => {
     if (this.editor.container) {
-      this.screenLeft = this.editor.container.getBoundingClientRect().left
-      this.screenTop = this.editor.container.getBoundingClientRect().top
+      this.editor.container.addEventListener('scroll', this.handleScroll)
       this.editor.container.addEventListener('mousedown', this.handleMouseDown);
     }
   }
 
   detach = () => {
     if (this.editor.container) {
+      this.editor.container.removeEventListener('scroll', this.handleScroll)
       this.editor.container.removeEventListener(
         'mousedown',
         this.handleMouseDown,
