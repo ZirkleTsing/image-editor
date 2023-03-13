@@ -129,11 +129,11 @@ export const isElementsInArea = (
 
   return (
     // 左上角
-    ((elementPosition.left > selectionPosition.right) && (elementPosition.left > selectionPosition.left)) && ((elementPosition.top < selectionPosition.bottom) && (elementPosition.top > selectionPosition.top)) ||
+    ((elementPosition.left < selectionPosition.right) && (elementPosition.left > selectionPosition.left)) && ((elementPosition.top < selectionPosition.bottom) && (elementPosition.top > selectionPosition.top)) ||
     // 右上角
     ((elementPosition.right > selectionPosition.left) && (elementPosition.right < selectionPosition.right)) && ((elementPosition.top < selectionPosition.bottom) && (elementPosition.top > selectionPosition.top)) ||
     // 左下角
-    ((elementPosition.left > selectionPosition.right) && (elementPosition.left > selectionPosition.left)) && ((elementPosition.bottom > selectionPosition.top) && (elementPosition.bottom < selectionPosition.bottom)) ||
+    ((elementPosition.left < selectionPosition.right) && (elementPosition.left > selectionPosition.left)) && ((elementPosition.bottom > selectionPosition.top) && (elementPosition.bottom < selectionPosition.bottom)) ||
     // 右下角
     ((elementPosition.right > selectionPosition.left) && (elementPosition.right < selectionPosition.right) && ((elementPosition.bottom > selectionPosition.top) && (elementPosition.bottom < selectionPosition.bottom)))
   )
